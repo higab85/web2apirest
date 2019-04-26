@@ -1,0 +1,319 @@
+{
+	"info": {
+		"_postman_id": "0187c1c0-a044-4557-88f8-bc72c05e9c75",
+		"name": "RESTCompeticiones",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GET competiciones",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/xml",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:8080/CompeticionesRESTClass/webresources/competiciones",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"CompeticionesRESTClass",
+						"webresources",
+						"competiciones"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT competiciones",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/xml",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<competiciones>\n    <competicion>\n        <nombre>Olimpiadas</nombre>\n        <deportes>\n            <deporte>\n                <nombre>tenis</nombre>\n                <tipo>pelota</tipo>\n                <equipos>2</equipos>\n                <tamanoEquipo>1-2</tamanoEquipo>\n            </deporte>\n            <deporte>\n                <nombre>futbol</nombre>\n                <tipo>pelota</tipo>\n                <equipos>2</equipos>\n                <tamanoEquipo>10</tamanoEquipo>\n            </deporte>\n        </deportes>\n    </competicion>\n    <competicion>\n        <nombre>Para Olimpiadas</nombre>\n        <deportes>\n\n        </deportes>\n    </competicion>\n    <competicion>\n        <nombre>Besti Olimpiadas</nombre>\n        <deportes>\n            <deporte>\n                <nombre>Gorila vs tigre</nombre>\n                <tipo>Lucha</tipo>\n                <equipos>2</equipos>\n                <tamanoEquipo>1</tamanoEquipo>\n            </deporte>\n            <deporte>\n                <nombre>Ratones hambrientos vs elefante</nombre>\n                <tipo>Lucha</tipo>\n                <equipos>2</equipos>\n                <tamanoEquipo>1+</tamanoEquipo>\n            </deporte>\n        </deportes>\n    </competicion>\n</competiciones>"
+				},
+				"url": {
+					"raw": "localhost:8080/CompeticionesRESTClass/webresources/competiciones",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"CompeticionesRESTClass",
+						"webresources",
+						"competiciones"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET competicion",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:8080/CompeticionesRESTClass/webresources/competiciones/1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"CompeticionesRESTClass",
+						"webresources",
+						"competiciones",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST competicion",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/xml",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "    <competicion>\n        <nombre>Olimpiadas de Codigo</nombre>\n        <deportes>\n            <deporte>\n                <nombre>Descifrar el enigma</nombre>\n                <tipo>criptografia</tipo>\n                <equipos>1+</equipos>\n                <tamanoEquipo>1</tamanoEquipo>\n            </deporte>\n            <deporte>\n                <nombre>Pair programming</nombre>\n                <tipo>Lucha</tipo>\n                <equipos>2</equipos>\n                <tamanoEquipo>1</tamanoEquipo>\n            </deporte>\n        </deportes>\n    </competicion>"
+				},
+				"url": {
+					"raw": "localhost:8080/CompeticionesRESTClass/webresources/competiciones",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"CompeticionesRESTClass",
+						"webresources",
+						"competiciones"
+					],
+					"query": [
+						{
+							"key": "saludo",
+							"value": "alfeizar",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT competicion",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/xml",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<competicion>\n    <nombre>Para Olimpiadas</nombre>\n    <deportes>\n        <deporte>\n            <nombre>Baloncesto</nombre>\n            <tipo>pelota</tipo>\n            <equipos>2</equipos>\n            <tamanoEquipo>5</tamanoEquipo>\n        </deporte>\n        <deporte>\n            <nombre>200m</nombre>\n            <tipo>correr</tipo>\n            <equipos>2+</equipos>\n            <tamanoEquipo>1</tamanoEquipo>\n        </deporte>\n    </deportes>\n</competicion>"
+				},
+				"url": {
+					"raw": "localhost:8080/CompeticionesRESTClass/webresources/competiciones/1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"CompeticionesRESTClass",
+						"webresources",
+						"competiciones",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DEL competicion",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:8080/CompeticionesRESTClass/webresources/competiciones/2",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"CompeticionesRESTClass",
+						"webresources",
+						"competiciones",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET deporte",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:8080/CompeticionesRESTClass/webresources/competiciones/1/deportes/1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"CompeticionesRESTClass",
+						"webresources",
+						"competiciones",
+						"1",
+						"deportes",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST deporte",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/xml",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<deporte>\n\t<nombre>Caza</nombre>\n\t<tipo>Salvaje</tipo>\n\t<equipos>1+</equipos>\n\t<tamanoEquipo>1</tamanoEquipo>\n</deporte>"
+				},
+				"url": {
+					"raw": "localhost:8080/CompeticionesRESTClass/webresources/competiciones/0/deportes",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"CompeticionesRESTClass",
+						"webresources",
+						"competiciones",
+						"0",
+						"deportes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT deporte",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/xml",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<deporte>\n    <nombre>200m</nombre>\n    <tipo>correr</tipo>\n    <equipos>2+</equipos>\n    <tamanoEquipo>1</tamanoEquipo>\n</deporte>"
+				},
+				"url": {
+					"raw": "localhost:8080/CompeticionesRESTClass/webresources/competiciones/1/deportes/1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"CompeticionesRESTClass",
+						"webresources",
+						"competiciones",
+						"1",
+						"deportes",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DEL deporte",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/xml"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:8080/CompeticionesRESTClass/webresources/competiciones/0/deportes/0",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"CompeticionesRESTClass",
+						"webresources",
+						"competiciones",
+						"0",
+						"deportes",
+						"0"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
