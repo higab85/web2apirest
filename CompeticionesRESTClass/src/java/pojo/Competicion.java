@@ -1,0 +1,90 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package pojo;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+
+
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement(name="competicion")
+public class Competicion implements Serializable{
+    
+    @XmlElement(name="deporte")
+    @XmlElementWrapper(name="deportes")
+    private ArrayList<Deporte> deportes;
+    
+    @XmlElement
+    private String nombre;
+    
+    public Competicion() {
+        deportes=new ArrayList<>();
+    }
+    
+    public Competicion(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public Competicion(String nombre, ArrayList<Deporte> deportes) {
+        this.nombre = nombre;
+        this.setDeportes(deportes);
+    }
+
+    public void anadirDeporte(Deporte deporte){
+        getDeportes().add(deporte);
+    }
+    
+    public void limpiarCompeticion(){
+        this.setDeportes(new ArrayList<>());
+    }
+    
+    public String toString(){
+        StringBuilder deportes = new StringBuilder();
+        for(Deporte deporte : this.deportes){
+            deportes.append(deporte.toString());
+        }
+        return "\n<competicion>"
+                + "\n<nombre>" + this.nombre + "</nombre>"
+                + "\n<deportes>" + deportes + "\n</deportes>"
+                +"\n</competicion>";
+    }
+
+    /**
+     * @return the nombre
+     */
+    public String getNombre() {
+        return nombre;
+    }
+
+    /**
+     * @param nombre the nombre to set
+     */
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    /**
+     * @return the deportes
+     */
+    public ArrayList<Deporte> getDeportes() {
+        return deportes;
+    }
+
+    /**
+     * @param deportes the deportes to set
+     */
+    public void setDeportes(ArrayList<Deporte> deportes) {
+        this.deportes = deportes;
+    }
+    
+}
+
+
