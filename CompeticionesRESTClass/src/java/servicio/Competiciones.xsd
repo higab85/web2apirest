@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+
+<xs:schema version="1.0"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified">
+    <xs:element name="deporte" type="deporte"/>
+    <xs:element name="competicion" type="competicion"/>
+    <xs:element name="competiciones">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="competicion" 
+                            type="competicion" 
+                            minOccurs = "0" 
+                            maxOccurs="unbounded" >
+                </xs:element>
+            </xs:sequence>			
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="competicion">
+        <xs:sequence>
+            <xs:element name="id" type="xs:int" minOccurs="0" maxOccurs="1" ></xs:element>
+            <xs:element name="nombre" type="xs:string"></xs:element>
+            <xs:element name="deportes">
+               <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="deporte" 
+                                    type="deporte" 
+                                    minOccurs = "0" 
+                                    maxOccurs="unbounded" >
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>			
+    </xs:complexType>
+    <xs:complexType name="deporte" >
+        <xs:sequence>
+            <xs:element name="id" type="xs:int" minOccurs="0" maxOccurs="1"></xs:element>
+            <xs:element name="nombre" type="xs:string"></xs:element>
+            <xs:element name="tipo" type="xs:string"></xs:element>
+            <xs:element name="equipos" type="xs:string"></xs:element>
+            <xs:element name="tamanoEquipo" type="xs:string"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

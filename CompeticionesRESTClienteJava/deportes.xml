@@ -1,0 +1,7 @@
+<deporte>
+	<i>6004</i>
+    <nombre>Gorila vs tigre</nombre>
+    <tipo>Lucha</tipo>
+    <equipos>2</equipos>
+    <tamanoEquipo>1</tamanoEquipo>
+</deporte>

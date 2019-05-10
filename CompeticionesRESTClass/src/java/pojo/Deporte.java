@@ -6,26 +6,33 @@
 package pojo;
 
 import java.io.Serializable;
+import java.util.Random;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name="deporte")
+@XmlType(propOrder = {"id", "nombre", "tipo", "equipos", "tamanoEquipo"})
 public class Deporte implements Serializable{
 
 
-    @XmlElement(name = "nombre")
+    @XmlElement
     private String nombre;
-    @XmlElement(name = "tipo")
+    @XmlElement
     private String tipo;
-    @XmlElement(name = "equipos")
+    @XmlElement
     private String equipos;
-    @XmlElement(name = "tamanoEquipo")
+    @XmlElement
     private String tamanoEquipo;
+    @XmlElement
+    private int id;
     
-    public Deporte(){    
+    public Deporte(){ 
+        this.id =  new Random().nextInt(10000);
+
     }
     
     public Deporte(String nombre, String tipo, String equipos, String tamanoEquipo){
@@ -33,6 +40,7 @@ public class Deporte implements Serializable{
         this.tipo = tipo;
         this.equipos = equipos;
         this.tamanoEquipo = tamanoEquipo;
+        this.id =  new Random().nextInt(10000);
     }
     
     
@@ -41,18 +49,21 @@ public class Deporte implements Serializable{
         System.out.println("Tipo: " + this.getTipo());
         System.out.println("Equipos: " + this.getEquipos());
         System.out.println("Tamaño equipo: " + this.getTamanoEquipo());
+        System.out.println("id: " + this.getTamanoEquipo());
+
     }
    
-    public String toString(){
-        StringBuilder deporte = new StringBuilder();
-        deporte.append("\n<deporte>");
-        deporte.append("\n<nombre>" + nombre + "</nombre>");
-        deporte.append("\n<tipo>" + tipo + "</tipo>");  
-        deporte.append("\n<equipos>" + equipos + "</equipos>");
-        deporte.append("\n<tamanoEquipo>" + tamanoEquipo + "</tamanoEquipo>");
-        deporte.append("\n</deporte>");
-        return deporte.toString();
-    }
+//    public String toString(){
+//        StringBuilder deporte = new StringBuilder();
+//        deporte.append("\n<deporte>");
+//        deporte.append("\n<id>" + getId() + "</id>");
+//        deporte.append("\n<nombre>" + nombre + "</nombre>");
+//        deporte.append("\n<tipo>" + tipo + "</tipo>");  
+//        deporte.append("\n<equipos>" + equipos + "</equipos>");
+//        deporte.append("\n<tamanoEquipo>" + tamanoEquipo + "</tamanoEquipo>");
+//        deporte.append("\n</deporte>");
+//        return deporte.toString();
+//    }
     
     /**
      * @return the nombre
@@ -108,5 +119,12 @@ public class Deporte implements Serializable{
      */
     public void setTamanoEquipo(String tamanoEquipo) {
         this.tamanoEquipo = tamanoEquipo;
+    }
+
+    /**
+     * @return the id
+     */
+    public int getId() {
+        return id;
     }
 }

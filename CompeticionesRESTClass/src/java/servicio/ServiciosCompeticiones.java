@@ -5,7 +5,12 @@
  */
 package servicio;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
@@ -18,7 +23,15 @@ import javax.inject.Singleton;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.POST;
 import javax.ws.rs.PathParam;
+import javax.xml.XMLConstants;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
+import jdk.internal.org.xml.sax.SAXException;
 import pojo.Competicion;
+import pojo.Competiciones;
 import pojo.Deporte;
 
 
@@ -31,7 +44,7 @@ import pojo.Deporte;
 @Path("competiciones")
 public class ServiciosCompeticiones {
 
-    ArrayList<Competicion> competiciones = new ArrayList<Competicion>();
+    Competiciones competiciones = new Competiciones();
 
     @Context
     private UriInfo context;
@@ -41,8 +54,14 @@ public class ServiciosCompeticiones {
      */
     public ServiciosCompeticiones() {
     }
-
     
+    private int findCompeticionIndex(int id) throws IndexOutOfBoundsException{
+        for (int i = 0; i<competiciones.getCompeticiones().size() ; i++ )
+            if(competiciones.getCompeticiones().get(i).getId() == id)
+                return i;
+        throw new IndexOutOfBoundsException();
+    }
+
 //  ---- COMPETICIONES ----  
     
     /**
@@ -51,34 +70,22 @@ public class ServiciosCompeticiones {
      */
     @GET
     @Produces(MediaType.APPLICATION_XML)
-    public String getCompeticiones() {
-        StringBuilder res = new StringBuilder();
-        res.append("<competiciones>");
-        for(Competicion competicion : this.competiciones){
-            res.append(competicion);
-        }
-        res.append("\n</competiciones>");
-        return res.toString();
+    public Competiciones getCompeticiones() {
+        return competiciones;
     }
     
     @PUT
     @Consumes(MediaType.APPLICATION_XML)
     public String putCompeticiones(ArrayList<Competicion> competiciones) {
-        this.competiciones = competiciones;
+        this.competiciones.setCompeticiones(competiciones);
         return "Competiciones modificadas";
     }
     
     @POST
     @Consumes(MediaType.APPLICATION_XML)
-    public String postCompeticion(Competicion competicion){
-        try{
-            this.competiciones.add(competicion);
-            return competicion.getDeportes().get(0).toString();
-        }
-        catch (Exception ex) {
-            return ex.toString();
-        }
-        
+    public Competicion postCompeticion(Competicion competicion){
+        this.competiciones.getCompeticiones().add(competicion);
+        return competicion;
     }
     
     /**
@@ -88,13 +95,11 @@ public class ServiciosCompeticiones {
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_XML)
-    public String getCompeticion(@PathParam("id") int id) {
-        try {
-            Competicion competicion = competiciones.get(id);
-            return competicion.toString();
-        }catch (IndexOutOfBoundsException ex){
-            return "No existe la competicion " + id;
-        }   
+    public Competicion getCompeticion(@PathParam("id") int id) throws IndexOutOfBoundsException {
+        for (Competicion competicion : competiciones.getCompeticiones())
+            if(competicion.getId() == id)
+                return competicion;
+        throw new IndexOutOfBoundsException("No existe la competicion " + id);   
     }
     
     /**
@@ -105,14 +110,15 @@ public class ServiciosCompeticiones {
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_XML)
     public String putCompeticion(@PathParam("id") int id, Competicion competicion) {
-        try {
-            competiciones.set(id, competicion);
+        try{
+            competiciones.getCompeticiones().set(findCompeticionIndex(id), competicion);
             return "Competición actualizada";
-        } catch (IndexOutOfBoundsException ex){
+        } catch (IndexOutOfBoundsException e){
             return "No existe la competicion " + id;
-        }  
+        }
     }
-        /**
+
+    /**
      * Retrieves representation of an instance of servicio.ServiciosCompeticiones
      * @return an instance of java.lang.String
      */
@@ -120,11 +126,11 @@ public class ServiciosCompeticiones {
     @Path("{id}")
     public String deleteCompeticion(@PathParam("id") int id) {
         try {
-            competiciones.remove(id);
+            competiciones.getCompeticiones().remove(findCompeticionIndex(id));
             return "Competición borrada";
-        } catch (IndexOutOfBoundsException ex){
+        } catch (IndexOutOfBoundsException e){
             return "No existe la competicion " + id;
-        }  
+        }
     }
     
 //    ---- DEPORTES ----
@@ -133,16 +139,8 @@ public class ServiciosCompeticiones {
     @POST
     @Path("{idCompeticion}/deportes")
     @Consumes(MediaType.APPLICATION_XML)
-    public String postDeporte(@PathParam("idCompeticion") int idCompeticion, Deporte deporte){
-        try{
-            Competicion competicion = this.competiciones.get(idCompeticion);
-            competicion.anadirDeporte(deporte);
-            return "Competición añadida";
-        }
-        catch (Exception ex) {
-            return ex.toString();
-        }
-        
+    public Deporte postDeporte(@PathParam("idCompeticion") int idCompeticion, Deporte deporte){
+        return competiciones.getCompeticiones().get(findCompeticionIndex(idCompeticion)).anadirDeporte(deporte);
     }
     
     /**
@@ -152,14 +150,11 @@ public class ServiciosCompeticiones {
     @GET
     @Path("{idCompeticion}/deportes/{idDeporte}")
     @Produces(MediaType.APPLICATION_XML)
-    public String getDeporte(@PathParam("idCompeticion") int idCompeticion, @PathParam("idDeporte") int idDeporte) {
-        try {
-            Competicion competicion = competiciones.get(idCompeticion);
-            Deporte deporte = competicion.getDeportes().get(idDeporte);
-            return deporte.toString();
-        }catch (IndexOutOfBoundsException ex){
-            return "No existe el deporte " + idDeporte + " de la competicion " + idCompeticion;
-        }   
+    public Deporte getDeporte(@PathParam("idCompeticion") int idCompeticion, @PathParam("idDeporte") int idDeporte) {
+        Competicion competicion = competiciones.getCompeticiones().get(findCompeticionIndex(idCompeticion));
+        int indexDeporte = competicion.findDeporteIndex(idDeporte);
+        Deporte deporte = competicion.getDeportes().get(indexDeporte);
+        return deporte;
     }
     
     /**
@@ -171,12 +166,13 @@ public class ServiciosCompeticiones {
     @Consumes(MediaType.APPLICATION_XML)
     public String putDeporte(@PathParam("idCompeticion") int idCompeticion, @PathParam("idDeporte") int idDeporte, Deporte deporte) {
         try {
-            Competicion competicion = competiciones.get(idCompeticion);
-            competicion.getDeportes().set(idDeporte, deporte);
-            return "Deporte actualizada";
-        } catch (IndexOutOfBoundsException ex){
+            Competicion competicion = competiciones.getCompeticiones().get(findCompeticionIndex(idCompeticion));
+            int indexDeporte = competicion.findDeporteIndex(idDeporte);
+            competicion.getDeportes().set(indexDeporte, deporte);
+            return "Deporte actualizado";
+        }catch (IndexOutOfBoundsException ex){
             return "No existe el deporte " + idDeporte + " de la competicion " + idCompeticion;
-        }  
+        }
     }
         /**
      * Retrieves representation of an instance of servicio.ServiciosCompeticiones
@@ -186,12 +182,37 @@ public class ServiciosCompeticiones {
     @Path("{idCompeticion}/deportes/{idDeporte}")
     public String deleteDeporte(@PathParam("idCompeticion") int idCompeticion, @PathParam("idDeporte") int idDeporte) {
         try {
-            competiciones.get(idCompeticion).getDeportes().remove(idDeporte);
-            return "Deporte borrado";
-        } catch (IndexOutOfBoundsException ex){
+            Competicion competicion = competiciones.getCompeticiones().get(findCompeticionIndex(idCompeticion));
+            int indexDeporte = competicion.findDeporteIndex(idDeporte);
+            competicion.getDeportes().remove(indexDeporte);
+            return "Deporte actualizado";
+        }catch (IndexOutOfBoundsException ex){
             return "No existe el deporte " + idDeporte + " de la competicion " + idCompeticion;
-        }  
+        }
     }    
     
+//    ---- validacion ----
 
+        @POST
+    @Path("validacion")
+    @Consumes(MediaType.APPLICATION_XML)
+    public String validacion(String contenidoXml){
+        String respuesta = "";
+        try {
+            ClassLoader classLoader = getClass().getClassLoader();
+            File xsdFile = new File(classLoader.getResource("servicio/Competiciones.xsd").getFile());
+
+            SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            Schema schema = schemaFactory.newSchema(xsdFile);
+            Validator validator = schema.newValidator();
+            Source ficheroXml = new StreamSource(new StringReader(contenidoXml));
+            validator.validate(ficheroXml);
+            respuesta = ("El fichero es válido");
+        } catch (org.xml.sax.SAXException | IOException ex) {
+            respuesta = (" NO es válido");
+            System.out.println(ex);
+        }
+        return respuesta;
+    }
+    
 }
