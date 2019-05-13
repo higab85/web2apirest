@@ -5,12 +5,12 @@
  */
 package servicio;
 
+import Db.Database;
+import autentificacion.UsuarioNecesario;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
@@ -29,9 +29,9 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
-import jdk.internal.org.xml.sax.SAXException;
 import pojo.Competicion;
 import pojo.Competiciones;
+import pojo.Usuario;
 import pojo.Deporte;
 
 
@@ -45,7 +45,8 @@ import pojo.Deporte;
 public class ServiciosCompeticiones {
 
     Competiciones competiciones = new Competiciones();
-
+    Database db = new Database();
+    
     @Context
     private UriInfo context;
 
@@ -61,7 +62,7 @@ public class ServiciosCompeticiones {
                 return i;
         throw new IndexOutOfBoundsException();
     }
-
+    
 //  ---- COMPETICIONES ----  
     
     /**
@@ -92,6 +93,7 @@ public class ServiciosCompeticiones {
      * Retrieves representation of an instance of servicio.ServiciosCompeticiones
      * @return an instance of java.lang.String
      */
+    @UsuarioNecesario
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_XML)
@@ -193,7 +195,7 @@ public class ServiciosCompeticiones {
     
 //    ---- validacion ----
 
-        @POST
+    @POST
     @Path("validacion")
     @Consumes(MediaType.APPLICATION_XML)
     public String validacion(String contenidoXml){
@@ -215,4 +217,24 @@ public class ServiciosCompeticiones {
         return respuesta;
     }
     
+    //  ---- AUTH ----  
+
+    @POST
+    @Path("login")
+    @Consumes(MediaType.APPLICATION_XML)
+    public String login(Usuario credenciales){
+        String token = db.login(credenciales);
+        if (token == null)
+            return "Could not login";
+        return token;
+    }
+    
+    @POST
+    @Path("signup")
+    @Consumes(MediaType.APPLICATION_XML)
+    public String signup(Usuario credenciales){
+        System.out.println("servicio.ServiciosCompeticiones.signup()");
+        String token = db.signup(credenciales);
+        return token;
+    }
 }

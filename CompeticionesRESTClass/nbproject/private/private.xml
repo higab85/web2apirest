@@ -3,11 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/squid/Documents/uni/4oCurso/web2/Practicas/practica3-REST/project/CompeticionesRESTClass/src/java/pojo/Deporte.java</file>
-            <file>file:/home/squid/Documents/uni/4oCurso/web2/Practicas/practica3-REST/project/CompeticionesRESTClass/src/java/servicio/ApplicationConfig.java</file>
             <file>file:/home/squid/Documents/uni/4oCurso/web2/Practicas/practica3-REST/project/CompeticionesRESTClass/src/java/servicio/ServiciosCompeticiones.java</file>
-            <file>file:/home/squid/Documents/uni/4oCurso/web2/Practicas/practica3-REST/project/CompeticionesRESTClass/src/java/pojo/Competiciones.java</file>
-            <file>file:/home/squid/Documents/uni/4oCurso/web2/Practicas/practica3-REST/project/CompeticionesRESTClass/src/java/pojo/Competicion.java</file>
+            <file>file:/home/squid/Documents/uni/4oCurso/web2/Practicas/practica3-REST/project/CompeticionesRESTClass/src/java/pojo/Usuario.java</file>
+            <file>file:/home/squid/Documents/uni/4oCurso/web2/Practicas/practica3-REST/project/CompeticionesRESTClass/src/java/Db/SQLiteJDBC.java</file>
+            <file>file:/home/squid/Documents/uni/4oCurso/web2/Practicas/practica3-REST/project/CompeticionesRESTClass/src/java/Db/Database.java</file>
         </group>
     </open-files>
 </project-private>
