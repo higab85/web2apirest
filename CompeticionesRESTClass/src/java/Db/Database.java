@@ -7,11 +7,11 @@ package Db;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Random;
+import pojo.Competicion;
+import pojo.Competiciones;
+import pojo.Deporte;
 import pojo.Usuario;
 
 /**
@@ -74,5 +74,44 @@ public class Database {
         if (user == null)
             return false;
         return true;
+    }
+    
+    public void setCompeticiones(Competiciones competiciones) {
+        jdbc.clearCompeticiones();
+        for(Competicion competicion : competiciones.getCompeticiones()){
+            addCompeticion(competicion);
+        }
+    }
+    
+    public Competiciones getCompeticiones() {
+        Competiciones competiciones = new Competiciones();
+        competiciones.setCompeticiones(jdbc.getCompeticiones());
+        return competiciones;
+    }
+
+    public void addCompeticion(Competicion competicion) {
+        jdbc.addCompeticion(competicion);
+    }
+
+    public void setCompeticion(Integer competicionId, Competicion competicionNew) {
+        jdbc.deleteCompeticion(competicionId);
+        jdbc.addCompeticion(competicionNew);
+    }
+
+    public void deleteCompeticion(int id) {
+        jdbc.deleteCompeticion(id);
+    }
+
+    public void addDeporte(Competicion competicion, Deporte deporte) {
+        jdbc.addDeporte(competicion, deporte);
+    }
+
+    public void setDeporte(Competicion competicion, int idDeporte, Deporte deporte) {
+        jdbc.deleteDeporte(competicion, idDeporte);
+        jdbc.addDeporte(competicion, deporte);
+    }
+
+    public void deleteDeporte(Competicion competicion, int idDeporte) {
+        jdbc.deleteDeporte(competicion, idDeporte);
     }
 }

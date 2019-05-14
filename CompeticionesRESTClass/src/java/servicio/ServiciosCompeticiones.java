@@ -44,8 +44,8 @@ import pojo.Deporte;
 @Path("competiciones")
 public class ServiciosCompeticiones {
 
-    Competiciones competiciones = new Competiciones();
     Database db = new Database();
+    Competiciones competiciones = db.getCompeticiones();
     
     @Context
     private UriInfo context;
@@ -77,8 +77,9 @@ public class ServiciosCompeticiones {
     
     @PUT
     @Consumes(MediaType.APPLICATION_XML)
-    public String putCompeticiones(ArrayList<Competicion> competiciones) {
-        this.competiciones.setCompeticiones(competiciones);
+    public String putCompeticiones(Competiciones competiciones) {
+        this.competiciones = competiciones;
+        db.setCompeticiones(competiciones);
         return "Competiciones modificadas";
     }
     
@@ -86,6 +87,7 @@ public class ServiciosCompeticiones {
     @Consumes(MediaType.APPLICATION_XML)
     public Competicion postCompeticion(Competicion competicion){
         this.competiciones.getCompeticiones().add(competicion);
+        db.addCompeticion(competicion);
         return competicion;
     }
     
@@ -111,9 +113,11 @@ public class ServiciosCompeticiones {
     @PUT
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_XML)
-    public String putCompeticion(@PathParam("id") int id, Competicion competicion) {
+    public String putCompeticion(@PathParam("id") int id, Competicion competicionNew) {
         try{
-            competiciones.getCompeticiones().set(findCompeticionIndex(id), competicion);
+            Integer competicionId = findCompeticionIndex(id);
+            competiciones.getCompeticiones().set(competicionId, competicionNew);
+            db.setCompeticion(competicionId, competicionNew);
             return "Competición actualizada";
         } catch (IndexOutOfBoundsException e){
             return "No existe la competicion " + id;
@@ -129,6 +133,7 @@ public class ServiciosCompeticiones {
     public String deleteCompeticion(@PathParam("id") int id) {
         try {
             competiciones.getCompeticiones().remove(findCompeticionIndex(id));
+            db.deleteCompeticion(id);
             return "Competición borrada";
         } catch (IndexOutOfBoundsException e){
             return "No existe la competicion " + id;
@@ -142,7 +147,9 @@ public class ServiciosCompeticiones {
     @Path("{idCompeticion}/deportes")
     @Consumes(MediaType.APPLICATION_XML)
     public Deporte postDeporte(@PathParam("idCompeticion") int idCompeticion, Deporte deporte){
-        return competiciones.getCompeticiones().get(findCompeticionIndex(idCompeticion)).anadirDeporte(deporte);
+        Competicion competicion = competiciones.getCompeticiones().get(findCompeticionIndex(idCompeticion));
+        db.addDeporte(competicion, deporte);
+        return competicion.anadirDeporte(deporte);
     }
     
     /**
@@ -171,6 +178,7 @@ public class ServiciosCompeticiones {
             Competicion competicion = competiciones.getCompeticiones().get(findCompeticionIndex(idCompeticion));
             int indexDeporte = competicion.findDeporteIndex(idDeporte);
             competicion.getDeportes().set(indexDeporte, deporte);
+            db.setDeporte(competicion, idDeporte, deporte);
             return "Deporte actualizado";
         }catch (IndexOutOfBoundsException ex){
             return "No existe el deporte " + idDeporte + " de la competicion " + idCompeticion;
@@ -187,6 +195,7 @@ public class ServiciosCompeticiones {
             Competicion competicion = competiciones.getCompeticiones().get(findCompeticionIndex(idCompeticion));
             int indexDeporte = competicion.findDeporteIndex(idDeporte);
             competicion.getDeportes().remove(indexDeporte);
+            db.deleteDeporte(competicion, idDeporte);
             return "Deporte actualizado";
         }catch (IndexOutOfBoundsException ex){
             return "No existe el deporte " + idDeporte + " de la competicion " + idCompeticion;

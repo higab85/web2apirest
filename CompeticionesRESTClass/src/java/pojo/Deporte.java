@@ -42,6 +42,14 @@ public class Deporte implements Serializable{
         this.tamanoEquipo = tamanoEquipo;
         this.id =  new Random().nextInt(10000);
     }
+
+    public Deporte(Integer id, String nombre, String tipo, String equipos, String tamanoEquipo) {
+        this.nombre = nombre;
+        this.tipo = tipo;
+        this.equipos = equipos;
+        this.tamanoEquipo = tamanoEquipo;
+        this.id = id;
+    }
     
     
     public void imprimirBonito(){

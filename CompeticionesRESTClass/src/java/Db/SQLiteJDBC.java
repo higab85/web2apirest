@@ -7,6 +7,9 @@ package Db;
 
 
 import java.sql.*;
+import java.util.ArrayList;
+import pojo.Competicion;
+import pojo.Deporte;
 import pojo.Usuario;
 /**
  *
@@ -30,6 +33,14 @@ public class SQLiteJDBC {
             System.exit(0);
         }
     }
+    
+    private void executeUpdate(String query) throws SQLException{
+        System.out.println(query);
+        Statement stmt = c.createStatement();
+        stmt.executeUpdate(query);
+        stmt.close();
+    }
+
     private void testTables(){
         try {
             Class.forName("org.sqlite.JDBC");
@@ -79,11 +90,7 @@ public class SQLiteJDBC {
         String[] statements = new String[] {sql1, sql2, sql3, sql4, sql5};
         for (String statement : statements)
         {
-            System.out.println(statement);
-            stmt = c.createStatement();
-            stmt.executeUpdate(statement);
-            stmt.close();
-            stmt = null;
+            executeUpdate(statement);
             System.out.println("Table created successfully");
         }
         this.c.close();
@@ -195,21 +202,163 @@ public class SQLiteJDBC {
     }
 
     String addToken(int userId, String token) {
-        Statement stmt = null;
         String query1 = "INSERT INTO Tokens (USUARIO_ID, TOKEN) VALUES('"
                     + userId + "','"
                     + token + "');";
         try {
             Class.forName("org.sqlite.JDBC");
             this.c = DriverManager.getConnection(connectionAddress);
-            stmt = this.c.createStatement();
-            stmt.executeUpdate( query1 );
-            stmt.close();
+         
+            executeUpdate(query1);
+            
             this.c.close();
             return token;
         }catch ( Exception e ) {
             sqlError(e);
             return "Could not add token";
+        }
+    }
+
+    void clear(String table) {
+        String query1 = "DELETE FROM " + table + ";";
+        try {
+            Class.forName("org.sqlite.JDBC");
+            this.c = DriverManager.getConnection(connectionAddress);
+            executeUpdate( query1 );
+            this.c.close();
+        }catch ( Exception e ) {
+            sqlError(e);
+        }
+    }
+    
+    ArrayList<Competicion> getCompeticiones(){
+        Statement stmt = null;
+        ArrayList<Competicion> competiciones = new ArrayList();
+        try {
+            Class.forName("org.sqlite.JDBC");
+            this.c = DriverManager.getConnection(connectionAddress);
+//            this.c.setAutoCommit(false);
+
+            stmt = this.c.createStatement();
+            ResultSet rs = stmt.executeQuery( "SELECT * FROM Competiciones;" );
+            while ( rs.next() ) {
+                Integer  id = rs.getInt("ID");
+                String  nombre = rs.getString("NOMBRE");
+                competiciones.add(new Competicion(id,nombre));
+                
+            }
+            stmt.close();
+            for(Competicion competicion: competiciones){
+                competicion.setDeportes(getDeportes(competicion));
+                System.out.println(competicion.getId());
+            }
+            this.c.close();
+        }catch ( Exception e ) {
+            sqlError(e);
+       }
+        return competiciones;   
+    }
+    
+    private ArrayList<Deporte> getDeportes(Competicion competicion) {
+        Statement stmt = null;
+        ArrayList<Deporte> deportes = new ArrayList();
+        try {
+            Class.forName("org.sqlite.JDBC");
+            this.c = DriverManager.getConnection(connectionAddress);
+//            this.c.setAutoCommit(false);
+
+            stmt = this.c.createStatement();
+            ResultSet rs = stmt.executeQuery( "SELECT * FROM Deportes WHERE "
+                    + "COMPETICION_ID=" + competicion.getId() + ";" );
+            while ( rs.next() ) {
+                Integer id = rs.getInt("ID");
+                String  nombre = rs.getString("NOMBRE");
+                String  tipo = rs.getString("TIPO");
+                String  equipos = rs.getString("EQUIPOS");
+                String  tamanoEquipo = rs.getString("TAMANOEQUIPO");
+                
+                Deporte deporte = new Deporte(id,nombre, tipo, equipos, tamanoEquipo);
+                deportes.add(deporte);
+            }
+            stmt.close();
+            this.c.close();
+        }catch ( Exception e ) {
+            sqlError(e);
+       }
+        return deportes;   
+    }
+
+    void clearCompeticiones() {
+        clear("Competiciones");
+    }
+
+    void addCompeticion(Competicion competicion) {
+        String query = "INSERT INTO Competiciones VALUES('" 
+                + competicion.getId() + "', '" + competicion.getNombre() + "');";
+        ArrayList<String> statements = new ArrayList();
+        statements.add(query);
+        for (Deporte deporte : competicion.getDeportes()){
+            String deporteQuery = "INSERT INTO Deportes VALUES('" +
+                    + deporte.getId() + "', '"
+                    + deporte.getNombre()+ "', '"
+                    + deporte.getTipo()+ "', '"
+                    + deporte.getEquipos()+ "', '"
+                    + deporte.getTamanoEquipo()+ "', '"
+                    + competicion.getId() + "');";
+            statements.add(deporteQuery);
+        }
+        try {
+            Class.forName("org.sqlite.JDBC");
+            this.c = DriverManager.getConnection(connectionAddress);
+            for (String statement : statements)
+                executeUpdate( statement );
+            this.c.close();
+        }catch ( Exception e ) {
+            sqlError(e);
+        }
+    }
+
+    void deleteCompeticion(int id) {
+        String query = "DELETE FROM  Competiciones WHERE ID='" + id + "';";
+        try {
+            Class.forName("org.sqlite.JDBC");
+            this.c = DriverManager.getConnection(connectionAddress);
+            executeUpdate( query );
+            this.c.close();
+        }catch ( Exception e ) {
+            sqlError(e);
+        }
+    }
+
+    void addDeporte(Competicion competicion, Deporte deporte) {
+        String query = "INSERT INTO Deportes VALUES(" +
+                    + deporte.getId() + ", '"
+                    + deporte.getNombre()+ "', '"
+                    + deporte.getTipo()+ "', '"
+                    + deporte.getEquipos()+ "', '"
+                    + deporte.getTamanoEquipo()+ "', "
+                    + competicion.getId() + ");";
+        try {
+            Class.forName("org.sqlite.JDBC");
+            this.c = DriverManager.getConnection(connectionAddress);
+            executeUpdate( query );
+            this.c.close();
+        }catch ( Exception e ) {
+            sqlError(e);
+        }
+    }
+
+    void deleteDeporte(Competicion competicion, int idDeporte) {
+        String query = "DELETE FROM  Deportes WHERE "
+                + "ID=" + idDeporte + " AND "
+                + "COMPETICION_ID=" + competicion.getId() + ";";
+        try {
+            Class.forName("org.sqlite.JDBC");
+            this.c = DriverManager.getConnection(connectionAddress);
+            executeUpdate( query );
+            this.c.close();
+        }catch ( Exception e ) {
+            sqlError(e);
         }
     }
 

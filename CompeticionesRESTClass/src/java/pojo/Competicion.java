@@ -50,6 +50,12 @@ public class Competicion implements Serializable{
         this.id =  new Random().nextInt(10000);
     }
 
+    
+    public Competicion(Integer id, String nombre) {
+        this.id = id;
+        this.nombre = nombre;
+    }
+    
     public Competicion(String nombre, ArrayList<Deporte> deportes) {
         this.nombre = nombre;
         this.setDeportes(deportes);
