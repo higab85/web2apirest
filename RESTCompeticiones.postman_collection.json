@@ -77,7 +77,7 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "localhost:8080/CompeticionesRESTClass/webresources/competiciones/1",
+					"raw": "localhost:8080/CompeticionesRESTClass/webresources/competiciones/1657",
 					"host": [
 						"localhost"
 					],
@@ -86,7 +86,7 @@
 						"CompeticionesRESTClass",
 						"webresources",
 						"competiciones",
-						"1"
+						"1657"
 					]
 				}
 			},
@@ -197,7 +197,7 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "localhost:8080/CompeticionesRESTClass/webresources/competiciones/1/deportes/1",
+					"raw": "localhost:8080/CompeticionesRESTClass/webresources/competiciones/8947/deportes/5262",
 					"host": [
 						"localhost"
 					],
@@ -206,9 +206,9 @@
 						"CompeticionesRESTClass",
 						"webresources",
 						"competiciones",
-						"1",
+						"8947",
 						"deportes",
-						"1"
+						"5262"
 					]
 				}
 			},
@@ -223,6 +223,11 @@
 						"key": "Content-Type",
 						"name": "Content-Type",
 						"value": "application/xml",
+						"type": "text"
+					},
+					{
+						"key": "",
+						"value": "",
 						"type": "text"
 					}
 				],
@@ -310,6 +315,134 @@
 						"0",
 						"deportes",
 						"0"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "validacion deporte",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/xml",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<deporte>\n\t<id>6004</id>\n    <nombre>Gorila vs tigre</nombre>\n    <tipo>Lucha</tipo>\n    <equipos>2</equipos>\n    <tamanoEquipo>1</tamanoEquipo>\n</deporte>"
+				},
+				"url": {
+					"raw": "localhost:8080/CompeticionesRESTClass/webresources/competiciones/validacion",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"CompeticionesRESTClass",
+						"webresources",
+						"competiciones",
+						"validacion"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "validacion Competicion",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/xml",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "    <competicion>\n        <id>3381</id>\n        <nombre>Olimpiadas</nombre>\n        <deportes>\n            <deporte>\n                <id>6484</id>\n                <nombre>tenis</nombre>\n                <tipo>pelota</tipo>\n                <equipos>2</equipos>\n                <tamanoEquipo>1-2</tamanoEquipo>\n            </deporte>\n            <deporte>\n                <id>4620</id>\n                <nombre>futbol</nombre>\n                <tipo>pelota</tipo>\n                <equipos>2</equipos>\n                <tamanoEquipo>10</tamanoEquipo>\n            </deporte>\n        </deportes>\n    </competicion>"
+				},
+				"url": {
+					"raw": "localhost:8080/CompeticionesRESTClass/webresources/competiciones/validacion",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"CompeticionesRESTClass",
+						"webresources",
+						"competiciones",
+						"validacion"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Signup",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/xml",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<usuario>\n\t<username>frikke</username>\n\t<password>delle</password>\n</usuario>"
+				},
+				"url": {
+					"raw": "localhost:8080/CompeticionesRESTClass/webresources/competiciones/signup",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"CompeticionesRESTClass",
+						"webresources",
+						"competiciones",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/xml",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<usuario>\n\t<username>frikke</username>\n\t<password>delle</password>\n</usuario>"
+				},
+				"url": {
+					"raw": "localhost:8080/CompeticionesRESTClass/webresources/competiciones/signup",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"CompeticionesRESTClass",
+						"webresources",
+						"competiciones",
+						"signup"
 					]
 				}
 			},
