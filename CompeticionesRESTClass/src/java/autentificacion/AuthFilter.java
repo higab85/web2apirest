@@ -106,6 +106,9 @@ public class AuthFilter implements ContainerRequestFilter {
     private void validateToken(String token) throws Exception {
         // Check if the token was issued by the server and if it's not expired
         // Throw an Exception if the token is invalid
+        Database db = new Database();
+        if(db.isTokenValid(token) == false)
+            throw new Exception("Token doesn't exist");
     }
     
 }

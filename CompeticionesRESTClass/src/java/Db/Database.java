@@ -60,6 +60,19 @@ public class Database {
     }
 
     public String getUsernameFromToken(String token) {
-        return jdbc.getUserFromToken(token).getUsername();
+        System.out.println("token: " + token);
+        Usuario user = jdbc.getUserFromToken(token);
+        System.out.println("user: " + user);
+        if (user != null)
+            return user.getUsername();
+        return "Invalid token";
+    }
+
+    public Boolean isTokenValid(String token) {
+        Usuario user = jdbc.getUserFromToken(token);
+        System.out.println("user: " + user);
+        if (user == null)
+            return false;
+        return true;
     }
 }

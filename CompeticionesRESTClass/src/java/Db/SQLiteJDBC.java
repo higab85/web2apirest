@@ -179,7 +179,7 @@ public class SQLiteJDBC {
             stmt = this.c.createStatement();
             ResultSet rs = stmt.executeQuery( "SELECT * FROM Tokens WHERE TOKEN='" + token + "';" );
             rs.next();
-            Integer userId = rs.getInt("USER");
+            Integer userId = rs.getInt("USUARIO_ID");
             rs.close();
             ResultSet rs2 = stmt.executeQuery( "SELECT * FROM Usuarios WHERE ID='" + userId + "';" );
             rs2.next();
