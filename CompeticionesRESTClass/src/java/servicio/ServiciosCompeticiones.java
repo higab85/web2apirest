@@ -10,6 +10,7 @@ import autentificacion.UsuarioNecesario;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
+import java.security.Principal;
 import java.util.ArrayList;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
@@ -23,6 +24,7 @@ import javax.inject.Singleton;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.POST;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.core.SecurityContext;
 import javax.xml.XMLConstants;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
@@ -50,6 +52,8 @@ public class ServiciosCompeticiones {
     @Context
     private UriInfo context;
 
+    @Context
+    SecurityContext securityContext;
     /**
      * Creates a new instance of ServiciosCompeticiones
      */
@@ -63,6 +67,11 @@ public class ServiciosCompeticiones {
         throw new IndexOutOfBoundsException();
     }
     
+    private Usuario getUser(){
+        Principal principal = securityContext.getUserPrincipal();
+        String username = principal.getName();
+        return db.getUserFromUsername(username);
+    }
 //  ---- COMPETICIONES ----  
     
     /**
@@ -70,24 +79,31 @@ public class ServiciosCompeticiones {
      * @return an instance of java.lang.String
      */
     @GET
+    @UsuarioNecesario
     @Produces(MediaType.APPLICATION_XML)
-    public Competiciones getCompeticiones() {
-        return competiciones;
+    public Competiciones getCompeticiones() {        
+        Usuario user = getUser();
+        Competiciones competicionesUsuario = db.getUserCompetitions(user);
+        return competicionesUsuario;
     }
     
     @PUT
+    @UsuarioNecesario
     @Consumes(MediaType.APPLICATION_XML)
     public String putCompeticiones(Competiciones competiciones) {
+        Usuario user = getUser();
         this.competiciones = competiciones;
-        db.setCompeticiones(competiciones);
+        db.setCompeticiones(competiciones, user);
         return "Competiciones modificadas";
     }
     
     @POST
+    @UsuarioNecesario
     @Consumes(MediaType.APPLICATION_XML)
     public Competicion postCompeticion(Competicion competicion){
+        Usuario user = getUser();
         this.competiciones.getCompeticiones().add(competicion);
-        db.addCompeticion(competicion);
+        db.addCompeticion(competicion, user);
         return competicion;
     }
     

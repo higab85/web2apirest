@@ -21,6 +21,7 @@ import pojo.Usuario;
 /**
  *
  * @author squid
+ * https://stackoverflow.com/questions/26777083/best-practice-for-rest-token-based-authentication-with-jax-rs-and-jersey
  */
 @UsuarioNecesario
 @Provider
@@ -55,14 +56,14 @@ public class AuthFilter implements ContainerRequestFilter {
             abortWithUnauthorized(requestContext);
         }
         Database db = new Database();
-        String username = db.getUsernameFromToken(token);
+
         final SecurityContext currentSecurityContext = requestContext.getSecurityContext();
 
         requestContext.setSecurityContext(new SecurityContext() {
 
             @Override
             public Principal getUserPrincipal() {
-                return () -> username;
+                return () -> db.getUsernameFromToken(token);
             }
 
             @Override
@@ -108,7 +109,7 @@ public class AuthFilter implements ContainerRequestFilter {
         // Throw an Exception if the token is invalid
         Database db = new Database();
         if(db.isTokenValid(token) == false)
-            throw new Exception("Token doesn't exist");
+            throw new Exception("Invalid token");
     }
     
 }

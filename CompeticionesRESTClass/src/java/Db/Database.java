@@ -20,11 +20,11 @@ import pojo.Usuario;
  */
 public class Database {
     
-    SQLiteJDBC jdbc = null;
+    JDBC jdbc = null;
     
     public Database(){
         try{
-            jdbc = new SQLiteJDBC();
+            jdbc = new JDBC();
         }catch (Exception e){
             System.err.println(e);
         }
@@ -76,10 +76,10 @@ public class Database {
         return true;
     }
     
-    public void setCompeticiones(Competiciones competiciones) {
+    public void setCompeticiones(Competiciones competiciones, Usuario user) {
         jdbc.clearCompeticiones();
         for(Competicion competicion : competiciones.getCompeticiones()){
-            addCompeticion(competicion);
+            addCompeticion(competicion, user);
         }
     }
     
@@ -89,8 +89,9 @@ public class Database {
         return competiciones;
     }
 
-    public void addCompeticion(Competicion competicion) {
+    public void addCompeticion(Competicion competicion, Usuario user) {
         jdbc.addCompeticion(competicion);
+        jdbc.linkCompeticionUsuario(competicion, user);
     }
 
     public void setCompeticion(Integer competicionId, Competicion competicionNew) {
@@ -113,5 +114,13 @@ public class Database {
 
     public void deleteDeporte(Competicion competicion, int idDeporte) {
         jdbc.deleteDeporte(competicion, idDeporte);
+    }
+
+    public Usuario getUserFromUsername(String username) {
+        return jdbc.getUser(username);
+    }
+
+    public Competiciones getUserCompetitions(Usuario user) {
+        return jdbc.getCompeticiones(user);
     }
 }

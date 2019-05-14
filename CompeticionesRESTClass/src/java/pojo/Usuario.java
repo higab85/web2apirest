@@ -30,7 +30,8 @@ public class Usuario implements Serializable {
     private String password;
     @XmlElement
     private String token;
-
+    
+    
     public Usuario(){}
     
      public Usuario(String username, String password) {
@@ -39,6 +40,13 @@ public class Usuario implements Serializable {
     }
      
     public Usuario(String username, String password, String token) {
+        this.username = username;
+        this.password = password;
+        this.token = token;
+    }
+
+    public Usuario(Integer id, String username, String password, String token) {
+        this.id = id;
         this.username = username;
         this.password = password;
         this.token = token;
