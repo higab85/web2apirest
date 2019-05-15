@@ -123,4 +123,9 @@ public class Database {
     public Competiciones getUserCompetitions(Usuario user) {
         return jdbc.getCompeticiones(user);
     }
+
+    public boolean userIsOwner(Usuario user, Competicion competicionCorrecta) {
+        Competiciones competiciones = getUserCompetitions(user);
+        return competiciones.getCompeticiones().contains(competicionCorrecta);
+    }
 }

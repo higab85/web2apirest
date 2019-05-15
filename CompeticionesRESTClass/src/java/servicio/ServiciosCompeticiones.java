@@ -60,12 +60,12 @@ public class ServiciosCompeticiones {
     public ServiciosCompeticiones() {
     }
     
-    private int findCompeticionIndex(int id) throws IndexOutOfBoundsException{
-        for (int i = 0; i<competiciones.getCompeticiones().size() ; i++ )
-            if(competiciones.getCompeticiones().get(i).getId() == id)
-                return i;
-        throw new IndexOutOfBoundsException();
-    }
+//    private int findCompeticionIndex(int id) throws IndexOutOfBoundsException{
+//        for (int i = 0; i<competiciones.getCompeticiones().size() ; i++ )
+//            if(competiciones.getCompeticiones().get(i).getId() == id)
+//                return i;
+//        throw new IndexOutOfBoundsException();
+//    }
     
     private Usuario getUser(){
         Principal principal = securityContext.getUserPrincipal();
@@ -87,15 +87,15 @@ public class ServiciosCompeticiones {
         return competicionesUsuario;
     }
     
-    @PUT
-    @UsuarioNecesario
-    @Consumes(MediaType.APPLICATION_XML)
-    public String putCompeticiones(Competiciones competiciones) {
-        Usuario user = getUser();
-        this.competiciones = competiciones;
-        db.setCompeticiones(competiciones, user);
-        return "Competiciones modificadas";
-    }
+//    @PUT
+//    @UsuarioNecesario
+//    @Consumes(MediaType.APPLICATION_XML)
+//    public String putCompeticiones(Competiciones competiciones) {
+//        Usuario user = getUser();
+//        this.competiciones = competiciones;
+//        db.setCompeticiones(competiciones, user);
+//        return "Competiciones modificadas";
+//    }
     
     @POST
     @UsuarioNecesario
@@ -116,54 +116,60 @@ public class ServiciosCompeticiones {
     @Path("{id}")
     @Produces(MediaType.APPLICATION_XML)
     public Competicion getCompeticion(@PathParam("id") int id) throws IndexOutOfBoundsException {
+        Competicion competicionCorrecta = null;
         for (Competicion competicion : competiciones.getCompeticiones())
             if(competicion.getId() == id)
-                return competicion;
-        throw new IndexOutOfBoundsException("No existe la competicion " + id);   
+                competicionCorrecta = competicion;        
+//        if (competicionCorrecta == null)
+//            throw new IndexOutOfBoundsException("No existe la competicion " + id);   
+        
+        Usuario user = getUser();
+        if (db.userIsOwner(user, competicionCorrecta))
+            return competicionCorrecta;
+
+        throw new IndexOutOfBoundsException("No eres dueño de la competicion " + id);   
     }
     
     /**
      * Retrieves representation of an instance of servicio.ServiciosCompeticiones
+     * @param id
+     * @param competicionNew
      * @return an instance of java.lang.String
      */
+    @UsuarioNecesario
     @PUT
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_XML)
     public String putCompeticion(@PathParam("id") int id, Competicion competicionNew) {
-        try{
-            Integer competicionId = findCompeticionIndex(id);
-            competiciones.getCompeticiones().set(competicionId, competicionNew);
-            db.setCompeticion(competicionId, competicionNew);
-            return "Competición actualizada";
-        } catch (IndexOutOfBoundsException e){
-            return "No existe la competicion " + id;
-        }
+
+        Competicion competicion = getCompeticion(id);
+        competiciones.getCompeticiones().set(id, competicionNew);
+        db.setCompeticion(id, competicionNew);
+        return "Competición actualizada";
     }
 
     /**
      * Retrieves representation of an instance of servicio.ServiciosCompeticiones
      * @return an instance of java.lang.String
      */
+    @UsuarioNecesario
     @DELETE
     @Path("{id}")
     public String deleteCompeticion(@PathParam("id") int id) {
-        try {
-            competiciones.getCompeticiones().remove(findCompeticionIndex(id));
-            db.deleteCompeticion(id);
-            return "Competición borrada";
-        } catch (IndexOutOfBoundsException e){
-            return "No existe la competicion " + id;
-        }
+        Competicion competicion = getCompeticion(id);
+        competiciones.getCompeticiones().remove(id);
+        db.deleteCompeticion(id);
+        return "Competición borrada";
     }
     
 //    ---- DEPORTES ----
     
-
+    @UsuarioNecesario
     @POST
     @Path("{idCompeticion}/deportes")
     @Consumes(MediaType.APPLICATION_XML)
     public Deporte postDeporte(@PathParam("idCompeticion") int idCompeticion, Deporte deporte){
-        Competicion competicion = competiciones.getCompeticiones().get(findCompeticionIndex(idCompeticion));
+        Competicion competicion = getCompeticion(idCompeticion);
         db.addDeporte(competicion, deporte);
         return competicion.anadirDeporte(deporte);
     }
@@ -172,11 +178,12 @@ public class ServiciosCompeticiones {
      * Retrieves representation of an instance of servicio.ServiciosCompeticiones
      * @return an instance of java.lang.String
      */
+    @UsuarioNecesario
     @GET
     @Path("{idCompeticion}/deportes/{idDeporte}")
     @Produces(MediaType.APPLICATION_XML)
     public Deporte getDeporte(@PathParam("idCompeticion") int idCompeticion, @PathParam("idDeporte") int idDeporte) {
-        Competicion competicion = competiciones.getCompeticiones().get(findCompeticionIndex(idCompeticion));
+        Competicion competicion = getCompeticion(idCompeticion);
         int indexDeporte = competicion.findDeporteIndex(idDeporte);
         Deporte deporte = competicion.getDeportes().get(indexDeporte);
         return deporte;
@@ -185,13 +192,14 @@ public class ServiciosCompeticiones {
     /**
      * Retrieves representation of an instance of servicio.ServiciosCompeticiones
      * @return an instance of java.lang.String
-     */
+     */        
+    @UsuarioNecesario
     @PUT
     @Path("{idCompeticion}/deportes/{idDeporte}")
     @Consumes(MediaType.APPLICATION_XML)
     public String putDeporte(@PathParam("idCompeticion") int idCompeticion, @PathParam("idDeporte") int idDeporte, Deporte deporte) {
         try {
-            Competicion competicion = competiciones.getCompeticiones().get(findCompeticionIndex(idCompeticion));
+            Competicion competicion = getCompeticion(idCompeticion);
             int indexDeporte = competicion.findDeporteIndex(idDeporte);
             competicion.getDeportes().set(indexDeporte, deporte);
             db.setDeporte(competicion, idDeporte, deporte);
@@ -204,11 +212,12 @@ public class ServiciosCompeticiones {
      * Retrieves representation of an instance of servicio.ServiciosCompeticiones
      * @return an instance of java.lang.String
      */
+    @UsuarioNecesario
     @DELETE
     @Path("{idCompeticion}/deportes/{idDeporte}")
     public String deleteDeporte(@PathParam("idCompeticion") int idCompeticion, @PathParam("idDeporte") int idDeporte) {
         try {
-            Competicion competicion = competiciones.getCompeticiones().get(findCompeticionIndex(idCompeticion));
+            Competicion competicion = getCompeticion(idCompeticion);
             int indexDeporte = competicion.findDeporteIndex(idDeporte);
             competicion.getDeportes().remove(indexDeporte);
             db.deleteDeporte(competicion, idDeporte);
