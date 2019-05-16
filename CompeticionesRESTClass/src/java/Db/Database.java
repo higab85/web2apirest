@@ -126,6 +126,14 @@ public class Database {
 
     public boolean userIsOwner(Usuario user, Competicion competicionCorrecta) {
         Competiciones competiciones = getUserCompetitions(user);
-        return competiciones.getCompeticiones().contains(competicionCorrecta);
+        for(Competicion competicion : competiciones.getCompeticiones())
+            if (competicion.getId() == competicionCorrecta.getId())
+                return true;
+        return false;
+    }
+
+    public void shareCompeticion(Competicion competicion, String username) {
+        Usuario user = jdbc.getUser(username);
+        jdbc.linkCompeticionUsuario(competicion, user);
     }
 }

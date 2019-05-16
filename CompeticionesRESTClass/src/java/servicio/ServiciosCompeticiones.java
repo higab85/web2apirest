@@ -83,6 +83,7 @@ public class ServiciosCompeticiones {
     @Produces(MediaType.APPLICATION_XML)
     public Competiciones getCompeticiones() {        
         Usuario user = getUser();
+        System.out.println("getCompeticiones. user " + user.getUsername());
         Competiciones competicionesUsuario = db.getUserCompetitions(user);
         return competicionesUsuario;
     }
@@ -117,13 +118,16 @@ public class ServiciosCompeticiones {
     @Produces(MediaType.APPLICATION_XML)
     public Competicion getCompeticion(@PathParam("id") int id) throws IndexOutOfBoundsException {
         Competicion competicionCorrecta = null;
-        for (Competicion competicion : competiciones.getCompeticiones())
-            if(competicion.getId() == id)
-                competicionCorrecta = competicion;        
+        for (Competicion competicion : getCompeticiones().getCompeticiones())
+            if(competicion.getId() == id){
+                competicionCorrecta = competicion; 
+                break;
+            }
 //        if (competicionCorrecta == null)
 //            throw new IndexOutOfBoundsException("No existe la competicion " + id);   
         
         Usuario user = getUser();
+        System.out.println("getCompeticion. user " + user.getUsername());
         if (db.userIsOwner(user, competicionCorrecta))
             return competicionCorrecta;
 
@@ -160,6 +164,19 @@ public class ServiciosCompeticiones {
         competiciones.getCompeticiones().remove(id);
         db.deleteCompeticion(id);
         return "Competición borrada";
+    }
+    
+    /**
+     * Retrieves representation of an instance of servicio.ServiciosCompeticiones
+     * @return an instance of java.lang.String
+     */
+    @UsuarioNecesario
+    @POST
+    @Path("{id}/share/{username}")
+    public String shareCompeticion(@PathParam("id") int id, @PathParam("username") String username) {
+        Competicion competicion = getCompeticion(id);
+        db.shareCompeticion(competicion, username);
+        return "Competición compartida";
     }
     
 //    ---- DEPORTES ----
