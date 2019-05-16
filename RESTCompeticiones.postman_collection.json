@@ -17,10 +17,6 @@
 						"type": "text"
 					}
 				],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
 					"raw": "localhost:8080/CompeticionesRESTClass/webresources/competiciones",
 					"host": [
@@ -70,14 +66,20 @@
 		{
 			"name": "GET competicion",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "2lie280lup1ec8b54bgoncssnd",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
-					"raw": "localhost:8080/CompeticionesRESTClass/webresources/competiciones/1657",
+					"raw": "localhost:8080/CompeticionesRESTClass/webresources/competiciones/8500",
 					"host": [
 						"localhost"
 					],
@@ -86,7 +88,7 @@
 						"CompeticionesRESTClass",
 						"webresources",
 						"competiciones",
-						"1657"
+						"8500"
 					]
 				}
 			},
@@ -167,10 +169,6 @@
 			"request": {
 				"method": "DELETE",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
 					"raw": "localhost:8080/CompeticionesRESTClass/webresources/competiciones/2",
 					"host": [
@@ -192,10 +190,6 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
 					"raw": "localhost:8080/CompeticionesRESTClass/webresources/competiciones/8947/deportes/5262",
 					"host": [
@@ -298,10 +292,6 @@
 						"value": "application/xml"
 					}
 				],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
 					"raw": "localhost:8080/CompeticionesRESTClass/webresources/competiciones/0/deportes/0",
 					"host": [
@@ -443,6 +433,39 @@
 						"webresources",
 						"competiciones",
 						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Compartir competicion",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "5do6qn2lb4l2f6a1idpe9uquv3",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/CompeticionesRESTClass/webresources/competiciones/1057/share/frikke",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"CompeticionesRESTClass",
+						"webresources",
+						"competiciones",
+						"1057",
+						"share",
+						"frikke"
 					]
 				}
 			},
