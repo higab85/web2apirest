@@ -47,7 +47,6 @@ import pojo.Deporte;
 public class ServiciosCompeticiones {
 
     Database db = new Database();
-    Competiciones competiciones = db.getCompeticiones();
     
     @Context
     private UriInfo context;
@@ -103,7 +102,6 @@ public class ServiciosCompeticiones {
     @Consumes(MediaType.APPLICATION_XML)
     public Competicion postCompeticion(Competicion competicion){
         Usuario user = getUser();
-        this.competiciones.getCompeticiones().add(competicion);
         db.addCompeticion(competicion, user);
         return competicion;
     }
@@ -145,9 +143,6 @@ public class ServiciosCompeticiones {
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_XML)
     public String putCompeticion(@PathParam("id") int id, Competicion competicionNew) {
-
-        Competicion competicion = getCompeticion(id);
-        competiciones.getCompeticiones().set(id, competicionNew);
         db.setCompeticion(id, competicionNew);
         return "Competición actualizada";
     }
@@ -160,8 +155,6 @@ public class ServiciosCompeticiones {
     @DELETE
     @Path("{id}")
     public String deleteCompeticion(@PathParam("id") int id) {
-        Competicion competicion = getCompeticion(id);
-        competiciones.getCompeticiones().remove(id);
         db.deleteCompeticion(id);
         return "Competición borrada";
     }

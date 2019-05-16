@@ -5,7 +5,12 @@
  */
 package competicionesrestclientejava;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -17,6 +22,7 @@ import javax.ws.rs.Path;
 import pojo.Competicion;
 import pojo.Competiciones;
 import pojo.Deporte;
+import pojo.Usuario;
 
 
 
@@ -43,6 +49,7 @@ public class CompeticionesRESTClienteJava {
         scanner = new Scanner(System.in);
         cs = new ServiciosCompeticiones();
 
+        authenticate();
         seleccionarCompeticion();
         crearMenu();
     }
@@ -55,7 +62,9 @@ public class CompeticionesRESTClienteJava {
         System.out.println("4.  Validar archivo");
         System.out.println("5.  Borrar competicion");
         System.out.println("6.  Borrar deporte");
-        System.out.println("7.  Salir");
+        System.out.println("7.  Modificar competicion");
+        System.out.println("8.  Compartir competicion");
+        System.out.println("9.  Salir");
         System.out.println(breaker);
 
         int opcion = scanner.nextInt();
@@ -82,7 +91,12 @@ public class CompeticionesRESTClienteJava {
             case 6:
                 borrarDeporte();
                 break;
-                
+            case 7:
+                modificarCompeticion();
+                break;
+            case 8:
+                compartirCompeticion();
+                break;
 //            case 5:
 //                validarArchivo();
 //                break;
@@ -98,18 +112,55 @@ public class CompeticionesRESTClienteJava {
         Competicion competi = new Competicion(nombre);
         return cs.postCompeticion(competi, Competicion.class);
     }
-
+    public static void iniciarSesion(){
+        System.out.println("Username: ");
+        String username = scanner.next();
+        System.out.println("Contraseña: ");
+        String password = scanner.next();
+        Usuario usuario = new Usuario(username, password);
+        String token = cs.login(usuario);
+        cs.setToken(token);
+    }
+    public static void registrarse(){
+        System.out.println("Username: ");
+        String username = scanner.next();
+        System.out.println("Contraseña: ");
+        String password = scanner.next();
+        Usuario usuario = new Usuario(username, password);
+        String token = cs.signup(usuario);
+        cs.setToken(token);
+    }
+    public static void authenticate(){
+        System.out.println("Que quiere hacer:");
+        System.out.println("1. Iniciar sesión");
+        System.out.println("2. Registrarse");
+        Integer tarea = scanner.nextInt();
+        if (tarea == 1 )
+            iniciarSesion();
+        else if(tarea == 2)
+            registrarse();
+        else {
+            System.out.println("Opción no válida. Opciones válidas: 1, 2");
+            authenticate();
+        }
+    }
 
     public static void seleccionarCompeticion(){
-        System.out.println("Seleccionar competicion a editar:");
-        Competiciones competicionesC = cs.getCompeticiones(Competiciones.class);
-        ArrayList<Competicion> competiciones = competicionesC.getCompeticiones();
-        if ( competiciones.isEmpty())
-            idCompeticion = Integer.toString(nuevaCompeticion().getId());
-        else{
-            for (Competicion competicion : competiciones)
-                System.out.println(competicion.getId() + " - " + competicion.getNombre());
-            idCompeticion =  Integer.toString(cs.getCompeticion(Competicion.class, scanner.next()).getId());
+        try{
+            System.out.println("Seleccionar competicion a editar:");
+            Competiciones competicionesC = cs.getCompeticiones(Competiciones.class);
+            ArrayList<Competicion> competiciones = competicionesC.getCompeticiones();
+            if ( competiciones.isEmpty())
+                idCompeticion = Integer.toString(nuevaCompeticion().getId());
+            else{
+                for (Competicion competicion : competiciones)
+                    System.out.println(competicion.getId() + " - " + competicion.getNombre());
+                idCompeticion =  Integer.toString(cs.getCompeticion(Competicion.class, scanner.next()).getId());
+            }
+        }
+        catch(javax.ws.rs.NotAuthorizedException e){
+            authenticate();
+            seleccionarCompeticion();
         }
     }
     
@@ -160,7 +211,7 @@ public class CompeticionesRESTClienteJava {
             System.out.println("Lista vacía!");
     }
     
-    private static void validarArchivo() {
+    private static String getFile(){
         System.out.println("Nombre del archivo: ");
         String nombreArchivo = scanner.next();
         StringBuilder contentBuilder = new StringBuilder();
@@ -172,23 +223,16 @@ public class CompeticionesRESTClienteJava {
         {
             System.out.println("No existe el archivo " + nombreArchivo);
         }
-        String response = cs.validacion(contentBuilder.toString());
-        System.out.println(response);
-//        String nombre = seleccionarArchivo();
-//        String validez = cs.validarArchivo(nombre);
-//        System.out.println(validez);
+        return contentBuilder.toString();
     }
- 
-//    public static void cambiosRealizados(){
-//        System.out.println("Cambios realizados, pero no guardados. Guardar? [s]i , [n]o");
-//        String guardar = scanner.next();
-//        if ("s".equals(guardar)){
-//            guardar();
-//            System.out.println("Deporte guardado");
-//        }
-//        else
-//            System.out.println("Deporte NO guardado");
-//    }
+    
+    private static void validarArchivo() {
+        String content = getFile();
+        if(content != null){
+            String response = cs.validacion(content);
+            System.out.println(response);
+        }
+    }
 
     private static void borrarCompeticion() {
         cs.deleteCompeticion(idCompeticion);
@@ -200,6 +244,22 @@ public class CompeticionesRESTClienteJava {
         System.out.println("ID de deporte a borrar:");
         String idDeporte = scanner.next();
         cs.deleteDeporte(idCompeticion, idDeporte);
+    }
+
+    private static void modificarCompeticion(){
+        System.out.println("Nuevo nombre de competicion: ");
+        String nombre = scanner.next();
+        Competicion competicion = cs.getCompeticion(Competicion.class, idCompeticion);
+        competicion.setNombre(nombre);
+        cs.putCompeticion(competicion, idCompeticion);
+    }
+
+    private static void compartirCompeticion() {
+        System.out.println("Nombre de usuario con el que quieres compartir esta competicion: ");
+        String nombre = scanner.next();
+        cs.shareCompeticion(idCompeticion, nombre);
+        System.out.println("Competicion compartida");
+
     }
 
 }

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<competicion>
+    <nombre>Olimpiadas de cacas</nombre>
+    <deportes>
+        <deporte>
+            <id>201</id>
+            <nombre>Tiro de caca</nombre>
+            <tipo>coprofilia</tipo>
+            <equipos>5+</equipos>
+            <tamanoEquipo>1</tamanoEquipo>
+        </deporte>
+        <deporte>
+            <id>472</id>
+            <nombre>Trueno</nombre>
+            <tipo>Gas</tipo>
+            <equipos>114</equipos>
+            <tamanoEquipo>131</tamanoEquipo>
+        </deporte>
+    </deportes>
+</competicion>

@@ -11,9 +11,11 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name="deporte")
+@XmlType(propOrder = {"id", "nombre", "tipo", "equipos", "tamanoEquipo"})
 public class Deporte implements Serializable{
 
 
@@ -40,6 +42,14 @@ public class Deporte implements Serializable{
         this.tamanoEquipo = tamanoEquipo;
         this.id =  new Random().nextInt(10000);
     }
+
+    public Deporte(Integer id, String nombre, String tipo, String equipos, String tamanoEquipo) {
+        this.nombre = nombre;
+        this.tipo = tipo;
+        this.equipos = equipos;
+        this.tamanoEquipo = tamanoEquipo;
+        this.id = id;
+    }
     
     
     public void imprimirBonito(){
@@ -51,17 +61,17 @@ public class Deporte implements Serializable{
 
     }
    
-    public String toString(){
-        StringBuilder deporte = new StringBuilder();
-        deporte.append("\n<deporte>");
-        deporte.append("\n<id>" + getId() + "</id>");
-        deporte.append("\n<nombre>" + nombre + "</nombre>");
-        deporte.append("\n<tipo>" + tipo + "</tipo>");  
-        deporte.append("\n<equipos>" + equipos + "</equipos>");
-        deporte.append("\n<tamanoEquipo>" + tamanoEquipo + "</tamanoEquipo>");
-        deporte.append("\n</deporte>");
-        return deporte.toString();
-    }
+//    public String toString(){
+//        StringBuilder deporte = new StringBuilder();
+//        deporte.append("\n<deporte>");
+//        deporte.append("\n<id>" + getId() + "</id>");
+//        deporte.append("\n<nombre>" + nombre + "</nombre>");
+//        deporte.append("\n<tipo>" + tipo + "</tipo>");  
+//        deporte.append("\n<equipos>" + equipos + "</equipos>");
+//        deporte.append("\n<tamanoEquipo>" + tamanoEquipo + "</tamanoEquipo>");
+//        deporte.append("\n</deporte>");
+//        return deporte.toString();
+//    }
     
     /**
      * @return the nombre

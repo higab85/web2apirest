@@ -13,10 +13,12 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Random;
+import javax.xml.bind.annotation.XmlType;
 
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name="competicion")
+@XmlType(propOrder = {"id", "nombre", "deportes"})
 public class Competicion implements Serializable{
     
     @XmlElement(name="deporte")
@@ -48,6 +50,12 @@ public class Competicion implements Serializable{
         this.id =  new Random().nextInt(10000);
     }
 
+    
+    public Competicion(Integer id, String nombre) {
+        this.id = id;
+        this.nombre = nombre;
+    }
+    
     public Competicion(String nombre, ArrayList<Deporte> deportes) {
         this.nombre = nombre;
         this.setDeportes(deportes);
@@ -64,17 +72,17 @@ public class Competicion implements Serializable{
         this.setDeportes(new ArrayList<>());
     }
     
-    public String toString(){
-        StringBuilder deportes = new StringBuilder();
-        for(Deporte deporte : this.deportes){
-            deportes.append(deporte.toString());
-        }
-        return "\n<competicion>"
-                + "\n<id>" + this.id + "</id>"
-                + "\n<nombre>" + this.nombre + "</nombre>"
-                + "\n<deportes>" + deportes + "\n</deportes>"
-                +"\n</competicion>";
-    }
+//    public String toString(){
+//        StringBuilder deportes = new StringBuilder();
+//        for(Deporte deporte : this.deportes){
+//            deportes.append(deporte.toString());
+//        }
+//        return "\n<competicion>"
+//                + "\n<id>" + this.id + "</id>"
+//                + "\n<nombre>" + this.nombre + "</nombre>"
+//                + "\n<deportes>" + deportes + "\n</deportes>"
+//                +"\n</competicion>";
+//    }
 
     /**
      * @return the nombre

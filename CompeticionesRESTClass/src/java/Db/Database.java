@@ -134,6 +134,7 @@ public class Database {
 
     public void shareCompeticion(Competicion competicion, String username) {
         Usuario user = jdbc.getUser(username);
-        jdbc.linkCompeticionUsuario(competicion, user);
+        if (!userIsOwner(user, competicion))
+            jdbc.linkCompeticionUsuario(competicion, user);
     }
 }

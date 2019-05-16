@@ -23,6 +23,10 @@ public class Competiciones implements Serializable {
         competiciones = new ArrayList<>();
     }
     
+    public Competiciones(ArrayList<Competicion> competiciones) {
+        this.competiciones = competiciones;
+    }
+    
     /**
      * @return the competiciones
      */
