@@ -42,13 +42,13 @@ public class Authservlet extends HttpServlet {
             out.println("<body>");
             out.println("<div>\n" +
                         "  <h2>Sign up</h2>\n" +
-                        "  <form action=\"/credentials\" method=\"POST\">\n" +
+                        "  <form action=\"/CompeticionesRESTClienteWeb/signup\" method=\"POST\">\n" +
                         "    Username: <input type=\"text\" name=\"username\"><br>\n" +
                         "    Password: <input type=\"text\" name=\"password\"><br>\n" +
                         "    <input type=\"submit\" value=\"Submit\">\n" +
                         "  </form>\n" +
                         "  <h2>Log in</h2>\n" +
-                        "  <form action=\"/credentials\" method=\"GET\">\n" +
+                        "  <form action=\"/CompeticionesRESTClienteWeb/login\" method=\"POST\">\n" +
                         "    Username: <input type=\"text\" name=\"username\"><br>\n" +
                         "    Password: <input type=\"text\" name=\"password\"><br>\n" +
                         "    <input type=\"submit\" value=\"Submit\">\n" +

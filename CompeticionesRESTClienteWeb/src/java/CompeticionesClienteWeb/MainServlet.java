@@ -8,8 +8,11 @@ package CompeticionesClienteWeb;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Optional;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -56,7 +59,13 @@ public class MainServlet extends HttpServlet {
             
             
             ServiciosCompeticiones cs = new ServiciosCompeticiones();
-            Competiciones cCompeticiones = cs.getCompeticiones(Competiciones.class);
+            
+            // https://www.baeldung.com/java-servlet-cookies-session
+            Optional<String> token = Arrays.stream(request.getCookies())
+                            .filter(c -> c.getName().equals("token_competiciones"))
+                            .map(Cookie::getValue)
+                            .findAny();
+            Competiciones cCompeticiones = cs.getCompeticiones(Competiciones.class, token.get());
             ArrayList<Competicion> competiciones = cCompeticiones.getCompeticiones();
 
             out.println("<h3> Competiciones:</h3>");
@@ -66,21 +75,21 @@ public class MainServlet extends HttpServlet {
             else
                 for(Competicion competicion : competiciones){
                     out.println("<div style='display: inline-block'>");
-                    out.println("<h4>" + competicion.getId() + " - " + competicion.getNombre() + "</h4>");
-                    out.println("<h5>Deportes </h5>");
-                    out.println("<ul>");
-                    for (Deporte deporte : competicion.getDeportes()){
-                        out.println("<li>");
-                            out.println("<ul>");
-                                out.println("<li><b>ID:</b> " + deporte.getId() + "</li>");
-                                out.println("<li><b>Nombre:</b> " + deporte.getNombre() + "</li>");
-                                out.println("<li><b>Tipo:</b> " + deporte.getTipo() + "</li>");
-                                out.println("<li><b>Equipos:</b> " + deporte.getEquipos() + "</li>");
-                                out.println("<li><b>Tamaño equipo:</b> " + deporte.getTamanoEquipo() + "</li>");
-                            out.println("</ul>");
-                        out.println("</li>");
-                    }
-                    out.println("</ul>");
+                        out.println("<h4>" + competicion.getId() + " - " + competicion.getNombre() + "</h4>");
+                        out.println("<h5>Deportes </h5>");
+                        out.println("<ul>");
+                        for (Deporte deporte : competicion.getDeportes()){
+                            out.println("<li>");
+                                out.println("<ul>");
+                                    out.println("<li><b>ID:</b> " + deporte.getId() + "</li>");
+                                    out.println("<li><b>Nombre:</b> " + deporte.getNombre() + "</li>");
+                                    out.println("<li><b>Tipo:</b> " + deporte.getTipo() + "</li>");
+                                    out.println("<li><b>Equipos:</b> " + deporte.getEquipos() + "</li>");
+                                    out.println("<li><b>Tamaño equipo:</b> " + deporte.getTamanoEquipo() + "</li>");
+                                out.println("</ul>");
+                            out.println("</li>");
+                        }
+                        out.println("</ul>");
                     out.println("</div>");
                 }
             out.println("</div>");
@@ -101,6 +110,12 @@ public class MainServlet extends HttpServlet {
 //                        "  return true;\n" +
 //                        "}\n" +
 //                        "</script>");
+            out.println("<h3>Compartir competición </h3>");
+            out.println("<form action='/CompeticionesRESTClienteWeb/compartir' method = \"POST\">");
+                out.println("<div>ID Competicion: <input type = \"text\" name = 'competicion' /></div>");
+                out.println("<div>Nombre usuario: <input type = \"text\" name = 'username' /></div>");
+                out.println("<input type = \"submit\" value = \"Mandar\" />");
+            out.println("</form>");
             out.println("<h3>Añadir deporte</h3>");
             out.println("<form action='/CompeticionesRESTClienteWeb/deportes' method = \"POST\">");
                 out.println("<div>ID Competicion: <input type = \"text\" name = 'competicion' /></div>");

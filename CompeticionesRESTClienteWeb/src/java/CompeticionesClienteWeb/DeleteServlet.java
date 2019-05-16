@@ -7,8 +7,11 @@ package CompeticionesClienteWeb;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.Optional;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -75,13 +78,16 @@ public class DeleteServlet extends HttpServlet {
             throws ServletException, IOException {
         
         ServiciosCompeticiones cs = new ServiciosCompeticiones();
-        
+        Optional<String> token = Arrays.stream(request.getCookies())
+            .filter(c -> c.getName().equals("token_competiciones"))
+            .map(Cookie::getValue)
+            .findAny();
         String idCompeticion = request.getParameter("competicion");
         String idDeporte = request.getParameter("deporte");
         if(idDeporte == null)
-            cs.deleteCompeticion(idCompeticion);
+            cs.deleteCompeticion(idCompeticion, token.get());
         else
-            cs.deleteDeporte(idCompeticion, idDeporte);
+            cs.deleteDeporte(idCompeticion, idDeporte, token.get());
         response.sendRedirect("/CompeticionesRESTClienteWeb/home");
     }
 

@@ -7,8 +7,11 @@ package CompeticionesClienteWeb;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.Optional;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,7 +22,7 @@ import pojo.Deporte;
  *
  * @author squid
  */
-@WebServlet(name = "DeporteServlet", urlPatterns = {"/deportes/*"})
+@WebServlet(name = "DeporteServlet", urlPatterns = {"/deportes"})
 public class DeporteServlet extends HttpServlet {
 
     /**
@@ -66,8 +69,12 @@ public class DeporteServlet extends HttpServlet {
         String idCompeticion = request.getParameter("competicion");
         String idDeporte = request.getParameter("deporte");
         
+        Optional<String> token = Arrays.stream(request.getCookies())
+                .filter(c -> c.getName().equals("token_competiciones"))
+                .map(Cookie::getValue)
+                .findAny();
         
-        Deporte deporte = cs.getDeporte(Deporte.class, idCompeticion, idDeporte);
+        Deporte deporte = cs.getDeporte(Deporte.class, idCompeticion, idDeporte, token.get());
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
@@ -102,7 +109,11 @@ public class DeporteServlet extends HttpServlet {
             throws ServletException, IOException {
         
         ServiciosCompeticiones cs = new ServiciosCompeticiones();
-
+       
+        Optional<String> token = Arrays.stream(request.getCookies())
+                .filter(c -> c.getName().equals("token_competiciones"))
+                .map(Cookie::getValue)
+                .findAny();
         String nombre = request.getParameter("nombre");
         String tipo = request.getParameter("tipo");
         String equipos = request.getParameter("equipos");
@@ -110,7 +121,7 @@ public class DeporteServlet extends HttpServlet {
         String idCompeticion = request.getParameter("competicion");
         
         Deporte deporte = new Deporte(nombre, tipo, equipos, tamanoEquipos);
-        cs.postDeporte(deporte, String.class, idCompeticion);
+        cs.postDeporte(deporte, String.class, idCompeticion, token.get());
         response.sendRedirect("/CompeticionesRESTClienteWeb/home");
     }
     

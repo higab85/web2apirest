@@ -8,6 +8,7 @@ package CompeticionesClienteWeb;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.HttpHeaders;
 
 /**
  * Jersey REST client generated for REST resource:ServiciosCompeticiones
@@ -33,49 +34,61 @@ public class ServiciosCompeticiones {
         webTarget = client.target(BASE_URI).path("competiciones");
     }
 
-    public String deleteCompeticion(String id) throws ClientErrorException {
-        return webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request().delete(String.class);
+    public String deleteCompeticion(String id, String token) throws ClientErrorException {
+        return webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request().header(HttpHeaders.AUTHORIZATION, token).delete(String.class);
     }
 
-    public String putCompeticion(Object requestEntity, String id) throws ClientErrorException {
-        return webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML), String.class);
+    public String putCompeticion(Object requestEntity, String id, String token) throws ClientErrorException {
+        return webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request(javax.ws.rs.core.MediaType.APPLICATION_XML).header(HttpHeaders.AUTHORIZATION, token).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML), String.class);
     }
 
-    public String putCompeticiones(Object requestEntity) throws ClientErrorException {
-        return webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML), String.class);
+    public String putDeporte(Object requestEntity, String idCompeticion, String idDeporte, String token) throws ClientErrorException {
+        return webTarget.path(java.text.MessageFormat.format("{0}/deportes/{1}", new Object[]{idCompeticion, idDeporte})).request(javax.ws.rs.core.MediaType.APPLICATION_XML).header(HttpHeaders.AUTHORIZATION, token).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML), String.class);
     }
 
-    public String putDeporte(Object requestEntity, String idCompeticion, String idDeporte) throws ClientErrorException {
-        return webTarget.path(java.text.MessageFormat.format("{0}/deportes/{1}", new Object[]{idCompeticion, idDeporte})).request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML), String.class);
+    public String shareCompeticion(String id, String username, String token) throws ClientErrorException {
+        return webTarget.path(java.text.MessageFormat.format("{0}/share/{1}", new Object[]{id, username})).request().header(HttpHeaders.AUTHORIZATION, token).post(null, String.class);
     }
 
-    public <T> T getDeporte(Class<T> responseType, String idCompeticion, String idDeporte) throws ClientErrorException {
+    public String deleteDeporte(String idCompeticion, String idDeporte, String token) throws ClientErrorException {
+        return webTarget.path(java.text.MessageFormat.format("{0}/deportes/{1}", new Object[]{idCompeticion, idDeporte})).request().header(HttpHeaders.AUTHORIZATION, token).delete(String.class);
+    }
+
+    public <T> T postCompeticion(Object requestEntity, Class<T> responseType, String token) throws ClientErrorException {
+        return webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).header(HttpHeaders.AUTHORIZATION, token).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML), responseType);
+    }
+
+    public String login(Object requestEntity) throws ClientErrorException {
+        return webTarget.path("login").request(javax.ws.rs.core.MediaType.APPLICATION_XML).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML), String.class);
+    }
+
+    public String signup(Object requestEntity) throws ClientErrorException {
+        return webTarget.path("signup").request(javax.ws.rs.core.MediaType.APPLICATION_XML).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML), String.class);
+    }
+
+    public <T> T postDeporte(Object requestEntity, Class<T> responseType, String idCompeticion, String token) throws ClientErrorException {
+        return webTarget.path(java.text.MessageFormat.format("{0}/deportes", new Object[]{idCompeticion})).request(javax.ws.rs.core.MediaType.APPLICATION_XML).header(HttpHeaders.AUTHORIZATION, token).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML), responseType);
+    }
+
+    public String validacion(Object requestEntity) throws ClientErrorException {
+        return webTarget.path("validacion").request(javax.ws.rs.core.MediaType.APPLICATION_XML).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML), String.class);
+    }
+
+    public <T> T getDeporte(Class<T> responseType, String idCompeticion, String idDeporte, String token) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("{0}/deportes/{1}", new Object[]{idCompeticion, idDeporte}));
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).header(HttpHeaders.AUTHORIZATION, token).get(responseType);
     }
 
-    public String deleteDeporte(String idCompeticion, String idDeporte) throws ClientErrorException {
-        return webTarget.path(java.text.MessageFormat.format("{0}/deportes/{1}", new Object[]{idCompeticion, idDeporte})).request().delete(String.class);
-    }
-
-    public <T> T postCompeticion(Object requestEntity, Class<T> responseType) throws ClientErrorException {
-        return webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML), responseType);
-    }
-
-    public <T> T getCompeticiones(Class<T> responseType) throws ClientErrorException {
+    public <T> T getCompeticiones(Class<T> responseType, String token) throws ClientErrorException {
         WebTarget resource = webTarget;
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).header(HttpHeaders.AUTHORIZATION, token).get(responseType);
     }
 
-    public <T> T getCompeticion(Class<T> responseType, String id) throws ClientErrorException {
+    public <T> T getCompeticion(Class<T> responseType, String id, String token) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("{0}", new Object[]{id}));
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
-    }
-
-    public <T> T postDeporte(Object requestEntity, Class<T> responseType, String idCompeticion) throws ClientErrorException {
-        return webTarget.path(java.text.MessageFormat.format("{0}/deportes", new Object[]{idCompeticion})).request(javax.ws.rs.core.MediaType.APPLICATION_XML).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML), responseType);
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).header(HttpHeaders.AUTHORIZATION, token).get(responseType);
     }
 
     public void close() {

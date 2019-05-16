@@ -181,7 +181,7 @@ public class ServiciosCompeticiones {
     public Deporte postDeporte(@PathParam("idCompeticion") int idCompeticion, Deporte deporte){
         Competicion competicion = getCompeticion(idCompeticion);
         db.addDeporte(competicion, deporte);
-        return competicion.anadirDeporte(deporte);
+        return deporte;
     }
     
     /**

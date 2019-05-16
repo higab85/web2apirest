@@ -15,14 +15,13 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import pojo.Competicion;
 
 /**
  *
  * @author squid
  */
-@WebServlet(name = "CompeticionServlet", urlPatterns = {"/competiciones"})
-public class CompeticionServlet extends HttpServlet {
+@WebServlet(name = "CompartirServlet", urlPatterns = {"/compartir"})
+public class CompartirServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -41,15 +40,15 @@ public class CompeticionServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet CompeticionServlet</title>");            
+            out.println("<title>Servlet CompartirServlet</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet CompeticionServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet CompartirServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
     }
-    
+
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -76,15 +75,15 @@ public class CompeticionServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
         ServiciosCompeticiones cs = new ServiciosCompeticiones();
         Optional<String> token = Arrays.stream(request.getCookies())
-                .filter(c -> c.getName().equals("token_competiciones"))
-                .map(Cookie::getValue)
-                .findAny();
-        String nombre = request.getParameter("nombre");
-        
-        Competicion competicion = new Competicion(nombre);
-        cs.postCompeticion(competicion, String.class, token.get());
+            .filter(c -> c.getName().equals("token_competiciones"))
+            .map(Cookie::getValue)
+            .findAny();
+        String idCompeticion = request.getParameter("competicion");
+        String username = request.getParameter("username");
+        cs.shareCompeticion(idCompeticion, username, token.get());
         response.sendRedirect("/CompeticionesRESTClienteWeb/home");
     }
 
