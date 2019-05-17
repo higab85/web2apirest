@@ -94,9 +94,10 @@ public class Database {
         jdbc.linkCompeticionUsuario(competicion, user);
     }
 
-    public void setCompeticion(Integer competicionId, Competicion competicionNew) {
+    public void setCompeticion(Integer competicionId, Competicion competicionNew, Usuario user) {
         jdbc.deleteCompeticion(competicionId);
-        jdbc.addCompeticion(competicionNew);
+        competicionNew.setId(competicionId);
+        addCompeticion(competicionNew, user);
     }
 
     public void deleteCompeticion(int id) {

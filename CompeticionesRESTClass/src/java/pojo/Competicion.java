@@ -118,6 +118,10 @@ public class Competicion implements Serializable{
     public int getId() {
         return id;
     }
+
+    public void setId(Integer id){
+        this.id = id;
+    }
     
 }
 

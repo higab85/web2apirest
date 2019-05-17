@@ -143,7 +143,8 @@ public class ServiciosCompeticiones {
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_XML)
     public String putCompeticion(@PathParam("id") int id, Competicion competicionNew) {
-        db.setCompeticion(id, competicionNew);
+        Usuario user = getUser();
+        db.setCompeticion(id, competicionNew, user);
         return "Competición actualizada";
     }
 

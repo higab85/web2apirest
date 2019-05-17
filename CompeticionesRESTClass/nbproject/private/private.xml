@@ -4,12 +4,7 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/home/squid/Documents/uni/4oCurso/web2/Practicas/practica3-REST/project/CompeticionesRESTClass/src/java/servicio/ServiciosCompeticiones.java</file>
-            <file>file:/home/squid/Documents/uni/4oCurso/web2/Practicas/practica3-REST/project/CompeticionesRESTClass/src/java/Db/JDBC.java</file>
-            <file>file:/home/squid/Documents/uni/4oCurso/web2/Practicas/practica3-REST/project/CompeticionesRESTClass/src/java/servicio/ApplicationConfig.java</file>
-            <file>file:/home/squid/Documents/uni/4oCurso/web2/Practicas/practica3-REST/project/CompeticionesRESTClass/src/java/pojo/Usuario.java</file>
-            <file>file:/home/squid/Documents/uni/4oCurso/web2/Practicas/practica3-REST/project/CompeticionesRESTClass/src/java/autentificacion/AuthFilter.java</file>
             <file>file:/home/squid/Documents/uni/4oCurso/web2/Practicas/practica3-REST/project/CompeticionesRESTClass/src/java/Db/Database.java</file>
-            <file>file:/home/squid/Documents/uni/4oCurso/web2/Practicas/practica3-REST/project/CompeticionesRESTClass/setup/glassfish-resources.xml</file>
         </group>
     </open-files>
 </project-private>
