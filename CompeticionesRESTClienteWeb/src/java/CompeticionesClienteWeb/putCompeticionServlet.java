@@ -21,8 +21,8 @@ import pojo.Competicion;
  *
  * @author squid
  */
-@WebServlet(name = "CompeticionServlet", urlPatterns = {"/competiciones"})
-public class CompeticionServlet extends HttpServlet {
+@WebServlet(name = "putCompeticionServlet", urlPatterns = {"/changeCompeticion"})
+public class putCompeticionServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -41,15 +41,15 @@ public class CompeticionServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet CompeticionServlet</title>");            
+            out.println("<title>Servlet putCompeticionServlet</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet CompeticionServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet putCompeticionServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
     }
-    
+
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -73,7 +73,7 @@ public class CompeticionServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    @Override
+        @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         ServiciosCompeticiones cs = new ServiciosCompeticiones();
@@ -82,12 +82,14 @@ public class CompeticionServlet extends HttpServlet {
                 .map(Cookie::getValue)
                 .findAny();
         String nombre = request.getParameter("nombre");
-        
-        Competicion competicion = new Competicion(nombre);
-        cs.postCompeticion(competicion, String.class, token.get());
+        String id = request.getParameter("id");
+
+        Competicion competicion = cs.getCompeticion(Competicion.class, id, token.get());
+        competicion.setNombre(nombre);
+        cs.putCompeticion(competicion, id, token.get());
         response.sendRedirect("/CompeticionesRESTClienteWeb/home");
     }
-    
+
     /**
      * Returns a short description of the servlet.
      *

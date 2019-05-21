@@ -94,5 +94,9 @@ public class ServiciosCompeticiones {
     public void close() {
         client.close();
     }
+
+    String logout(String token) throws ClientErrorException{
+        return webTarget.path("logout").request().header(HttpHeaders.AUTHORIZATION, token).post(null, String.class);
+    }
     
 }

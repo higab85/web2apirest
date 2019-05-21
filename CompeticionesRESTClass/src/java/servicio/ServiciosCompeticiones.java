@@ -22,6 +22,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.core.MediaType;
 import javax.inject.Singleton;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.POST;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.SecurityContext;
@@ -121,15 +122,12 @@ public class ServiciosCompeticiones {
                 competicionCorrecta = competicion; 
                 break;
             }
-//        if (competicionCorrecta == null)
-//            throw new IndexOutOfBoundsException("No existe la competicion " + id);   
-        
         Usuario user = getUser();
         System.out.println("getCompeticion. user " + user.getUsername());
         if (db.userIsOwner(user, competicionCorrecta))
             return competicionCorrecta;
 
-        throw new IndexOutOfBoundsException("No eres dueño de la competicion " + id);   
+        return null;   
     }
     
     /**
@@ -143,8 +141,7 @@ public class ServiciosCompeticiones {
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_XML)
     public String putCompeticion(@PathParam("id") int id, Competicion competicionNew) {
-        Usuario user = getUser();
-        db.setCompeticion(id, competicionNew, user);
+        db.setCompeticion(id, competicionNew);
         return "Competición actualizada";
     }
 
@@ -270,16 +267,28 @@ public class ServiciosCompeticiones {
     public String login(Usuario credenciales){
         String token = db.login(credenciales);
         if (token == null)
-            return "Could not login";
+            throw new NotAuthorizedException("invalid credentials");
         return token;
+    }
+    @UsuarioNecesario
+    @POST
+    @Path("logout")
+    public String logout(){
+        Usuario user = getUser();
+        db.logout(user);
+        return "logged out";
     }
     
     @POST
     @Path("signup")
     @Consumes(MediaType.APPLICATION_XML)
     public String signup(Usuario credenciales){
-        System.out.println("servicio.ServiciosCompeticiones.signup()");
-        String token = db.signup(credenciales);
-        return token;
+        
+        if(db.checkUserExists(credenciales))
+            return "Usuario ya existe";
+        else {
+            String token = db.signup(credenciales);
+            return token;
+        }
     }
 }

@@ -37,26 +37,33 @@ public class Database {
         if(user == null)
             return "User doesn't exist";
         else if (user.getPassword().equals(password)){
-            return user.getToken();
+            return getToken(user);
         }
         return "Wrong password";
+    }
+    
+    public String makeTokenForUser(Usuario user){
+        Random random = new SecureRandom();
+        String token = new BigInteger(130, random).toString(32);
+        jdbc.addToken(user.getId(), token);
+        return token;
     }
 
     public String signup(Usuario submittedUser) {
         System.out.println("Db.Database.signup()");
-        Random random = new SecureRandom();
-        String token = new BigInteger(130, random).toString(32);
-        submittedUser.setToken(token);
         int userId = jdbc.createUser(submittedUser);
-        if( userId != -1 ){
-            return jdbc.addToken(userId, token);
-        }
+        if( userId != -1 )
+            return makeTokenForUser(submittedUser);
         else
             return "User already exists";
     }
 
-    public Usuario getToken(String token) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public String getToken(Usuario user) {
+        String token = jdbc.getToken(user.getId());
+        if (token == null)
+            token = makeTokenForUser(user);
+        System.out.println("Get token: " + token);
+        return token;
     }
 
     public String getUsernameFromToken(String token) {
@@ -137,5 +144,14 @@ public class Database {
         Usuario user = jdbc.getUser(username);
         if (!userIsOwner(user, competicion))
             jdbc.linkCompeticionUsuario(competicion, user);
+    }
+
+    public void logout(Usuario user) {
+        jdbc.logoutUser(user);
+    }
+
+    public boolean checkUserExists(Usuario credenciales) {
+        Usuario user = jdbc.getUser(credenciales.getUsername());
+        return user != null;
     }
 }

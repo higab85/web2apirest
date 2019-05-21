@@ -19,7 +19,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name="usuario")
-@XmlType(propOrder = {"username", "password", "token"})
+@XmlType(propOrder = {"username", "password"})
 public class Usuario implements Serializable {
 
     @XmlTransient
@@ -28,8 +28,8 @@ public class Usuario implements Serializable {
     private String username;
     @XmlElement
     private String password;
-    @XmlElement
-    private String token;
+//    @XmlElement
+//    private String token;
     
     
     public Usuario(){}
@@ -39,17 +39,17 @@ public class Usuario implements Serializable {
         this.password = password;
     }
      
-    public Usuario(String username, String password, String token) {
-        this.username = username;
-        this.password = password;
-        this.token = token;
-    }
+//    public Usuario(String username, String password, String token) {
+//        this.username = username;
+//        this.password = password;
+////        this.token = token;
+//    }
 
-    public Usuario(Integer id, String username, String password, String token) {
+    public Usuario(Integer id, String username, String password) {
         this.id = id;
         this.username = username;
         this.password = password;
-        this.token = token;
+//        this.token = token;
     }
 
     /**
@@ -80,19 +80,19 @@ public class Usuario implements Serializable {
         this.password = password;
     }
 
-    /**
-     * @return the token
-     */
-    public String getToken() {
-        return token;
-    }
-
-    /**
-     * @param token the token to set
-     */
-    public void setToken(String token) {
-        this.token = token;
-    }
+//    /**
+//     * @return the token
+//     */
+//    public String getToken() {
+//        return token;
+//    }
+//
+//    /**
+//     * @param token the token to set
+//     */
+//    public void setToken(String token) {
+//        this.token = token;
+//    }
 
     /**
      * @return the id

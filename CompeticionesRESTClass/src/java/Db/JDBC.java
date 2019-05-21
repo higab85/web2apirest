@@ -143,12 +143,12 @@ public class JDBC {
         
         Integer id = (Integer) values.get(0);
         String password = (String) values.get(1);
-        String token = getToken(id);
+//        String token = getToken(id);
         
-        return new Usuario(id, username, password, token);
+        return new Usuario(id, username, password);
     }
     
-    private String getToken(Integer userId) {
+    public String getToken(Integer userId) {
         String query = "SELECT * FROM Tokens WHERE USUARIO_ID='" + userId + "';";
         ArrayList<Integer> types = new ArrayList();
         ArrayList<String> names = new ArrayList();
@@ -156,9 +156,12 @@ public class JDBC {
         types.add(STRING);
         names.add("TOKEN");
         
-        ArrayList<Object> values = executeQuery(query, types, names).get(0);
-        
-        return (String) values.get(0);
+        try{
+            ArrayList<Object> values = executeQuery(query, types, names).get(0);
+            return (String) values.get(0);
+        }catch(java.lang.IndexOutOfBoundsException e){
+            return null;
+        }
     }
     
     Integer createUser(Usuario submittedUser) {
@@ -207,8 +210,7 @@ public class JDBC {
         
         return new Usuario( 
                 (String) values2.get(0), 
-                (String) values2.get(1), 
-                token);
+                (String) values2.get(1));
     }
 
     String addToken(int userId, String token) {
@@ -360,6 +362,11 @@ public class JDBC {
             + user.getId() + ", "
             + competicion.getId() + ");";
         execute( query );
+    }
+
+    void logoutUser(Usuario user) {
+        String query = "DELETE FROM Tokens WHERE USUARIO_ID='" + user.getId() + "';";
+        execute(query);
     }
 
 }

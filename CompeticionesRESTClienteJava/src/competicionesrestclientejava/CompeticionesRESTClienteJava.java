@@ -48,7 +48,7 @@ public class CompeticionesRESTClienteJava {
         // TODO code application logic here 
         scanner = new Scanner(System.in);
         cs = new ServiciosCompeticiones();
-
+        
         authenticate();
         seleccionarCompeticion();
         crearMenu();
@@ -64,44 +64,56 @@ public class CompeticionesRESTClienteJava {
         System.out.println("6.  Borrar deporte");
         System.out.println("7.  Modificar competicion");
         System.out.println("8.  Compartir competicion");
-        System.out.println("9.  Salir");
+        System.out.println("9.  Cambiar competicion");
+        System.out.println("10.  Cerrar sesión");
+        System.out.println("11.  Salir");
+
         System.out.println(breaker);
 
+        
         int opcion = scanner.nextInt();
         comprobar(opcion);
+
     }
 
     public static void comprobar(int opcion) {
-        switch (opcion) {
-            case 1:
-                crearDeporte();
-                break;
-            case 2:
-                listarDeportes();
-                break;
-            case 3:
-                obtenerDeporte();
-                break;
-            case 4:
-                validarArchivo();
-                break;
-            case 5:
-                borrarCompeticion();
-                break;
-            case 6:
-                borrarDeporte();
-                break;
-            case 7:
-                modificarCompeticion();
-                break;
-            case 8:
-                compartirCompeticion();
-                break;
-//            case 5:
-//                validarArchivo();
-//                break;
-            default:
-                System.exit(0);
+        try{
+            switch (opcion) {
+                case 1:
+                    crearDeporte();
+                    break;
+                case 2:
+                    listarDeportes();
+                    break;
+                case 3:
+                    obtenerDeporte();
+                    break;
+                case 4:
+                    validarArchivo();
+                    break;
+                case 5:
+                    borrarCompeticion();
+                    break;
+                case 6:
+                    borrarDeporte();
+                    break;
+                case 7:
+                    modificarCompeticion();
+                    break;
+                case 8:
+                    compartirCompeticion();
+                    break;
+                case 9:
+                    seleccionarCompeticion();
+                    break;
+                case 10:
+                    logout();
+                    break;
+                default:
+                    System.exit(0);
+            }
+        }catch(javax.ws.rs.InternalServerErrorException  e){
+            System.err.println("Error");
         }
         crearMenu();
     }
@@ -119,7 +131,12 @@ public class CompeticionesRESTClienteJava {
         String password = scanner.next();
         Usuario usuario = new Usuario(username, password);
         String token = cs.login(usuario);
-        cs.setToken(token);
+        if (token == null){
+            System.out.println("No se pudo iniciar sesión, inténtelo de nuevo");
+            iniciarSesion();
+        }
+        else
+            cs.setToken(token);
     }
     public static void registrarse(){
         System.out.println("Username: ");
@@ -160,6 +177,9 @@ public class CompeticionesRESTClienteJava {
         }
         catch(javax.ws.rs.NotAuthorizedException e){
             authenticate();
+            seleccionarCompeticion();
+        }catch(javax.ws.rs.InternalServerErrorException  e){
+            System.err.println("Por favor introduzca una competicion existente");
             seleccionarCompeticion();
         }
     }
@@ -260,6 +280,11 @@ public class CompeticionesRESTClienteJava {
         cs.shareCompeticion(idCompeticion, nombre);
         System.out.println("Competicion compartida");
 
+    }
+
+    private static void logout() {
+        cs.logout();
+        authenticate();
     }
 
 }

@@ -64,9 +64,12 @@ public class ServiciosCompeticiones {
     }
 
     public String login(Object requestEntity) throws ClientErrorException {
-        return webTarget.path("login").request(javax.ws.rs.core.MediaType.APPLICATION_XML).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML), String.class);
+        try{
+            return webTarget.path("login").request(javax.ws.rs.core.MediaType.APPLICATION_XML).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML), String.class);
+        }catch (Exception e){
+            return null;
+        }
     }
-
     public String signup(Object requestEntity) throws ClientErrorException {
         return webTarget.path("signup").request(javax.ws.rs.core.MediaType.APPLICATION_XML).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML), String.class);
     }
@@ -98,6 +101,10 @@ public class ServiciosCompeticiones {
 
     public void close() {
         client.close();
+    }
+
+    public String logout() throws ClientErrorException {
+        return webTarget.path("logout").request().header(HttpHeaders.AUTHORIZATION, token).post(null, String.class);
     }
     
 }
